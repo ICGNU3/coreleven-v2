@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -7,6 +8,7 @@ interface PrimaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: 'default' | 'outline' | 'ghost';
   size?: 'default' | 'sm' | 'lg' | 'icon';
   className?: string;
+  asChild?: boolean;  // Adding support for the asChild prop
 }
 
 export function PrimaryButton({ 
@@ -14,6 +16,7 @@ export function PrimaryButton({
   variant = 'default', 
   size = 'default',
   className,
+  asChild,
   ...props 
 }: PrimaryButtonProps) {
   return (
@@ -27,6 +30,7 @@ export function PrimaryButton({
         variant === 'ghost' ? 'text-earth-600 hover:bg-earth-50' : '',
         className
       )}
+      asChild={asChild}
       {...props}
     >
       {children}
