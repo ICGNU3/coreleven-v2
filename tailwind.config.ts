@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,29 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				earth: {
+					100: "#F1E9DC",
+					200: "#E2D4C0",
+					300: "#C7BA9F",
+					400: "#A99E80",
+					500: "#8A7E60",
+					600: "#6A5F44",
+					700: "#4A4230",
+					800: "#312C1F",
+					900: "#1A180F",
+				},
+				stone: {
+					100: "#F6F6F7",
+					200: "#E5E5E7",
+					300: "#D2D2D6",
+					400: "#9F9EA1",
+					500: "#8A898C",
+					600: "#635F68",
+					700: "#403E43",
+					800: "#2E2B31",
+					900: "#1A1A1C",
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,12 +107,31 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'ripple': {
+					'0%': { transform: 'scale(0)', opacity: '1' },
+					'60%': { transform: 'scale(1)', opacity: '0.3' },
+					'100%': { transform: 'scale(1.5)', opacity: '0' },
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' },
+				},
+				'fade-out': {
+					'0%': { opacity: '1' },
+					'100%': { opacity: '0' },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'ripple': 'ripple 2s infinite ease-in-out',
+				'fade-in': 'fade-in 0.5s ease-in-out',
+				'fade-out': 'fade-out 0.5s ease-in-out'
+			},
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
