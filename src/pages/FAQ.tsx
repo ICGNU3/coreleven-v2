@@ -8,6 +8,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { 
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from "@/components/ui/collapsible";
+import { PrimaryButton } from '@/components/PrimaryButton';
+import { Link } from 'react-router-dom';
 
 const FAQ = () => {
   return (
@@ -26,7 +33,7 @@ const FAQ = () => {
               feel free to reach out through our contact page.
             </p>
             
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion type="single" collapsible className="w-full mb-10">
               {/* Core Questions */}
               <AccordionItem value="what-is-goal">
                 <AccordionTrigger className="text-lg font-medium text-earth-700">
@@ -70,15 +77,16 @@ const FAQ = () => {
                 </AccordionContent>
               </AccordionItem>
               
-              {/* Additional Anticipated Questions */}
+              {/* Additional Questions */}
               <AccordionItem value="payment">
                 <AccordionTrigger className="text-lg font-medium text-earth-700">
                   Why is there a payment of $11.11?
                 </AccordionTrigger>
                 <AccordionContent className="text-stone-700">
-                  The one-time payment of $11.11 serves as a small commitment threshold and helps fund the development of 
+                  The one-time payment of $11.11 serves as a symbolic threshold of commitment and helps fund the development of 
                   tools and systems that support the Coreleven structure. It's not recurring, and it's not distributed to 
-                  members — it goes directly into building and maintaining the system itself.
+                  members — it goes directly into building and maintaining the system itself. The payment is a means of lighting 
+                  a node, a symbolic message of consent and belief. The value of the network itself is what we seek to harness.
                 </AccordionContent>
               </AccordionItem>
               
@@ -159,6 +167,18 @@ const FAQ = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+
+            <div className="mt-12 text-center">
+              <h3 className="text-xl font-medium mb-4 text-earth-700">Ready to build your Grove?</h3>
+              <div className="flex justify-center gap-4">
+                <PrimaryButton asChild>
+                  <Link to="/invite">I've been invited</Link>
+                </PrimaryButton>
+                <PrimaryButton asChild variant="outline">
+                  <Link to="/">Learn more</Link>
+                </PrimaryButton>
+              </div>
+            </div>
           </div>
         </main>
       </div>

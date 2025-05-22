@@ -9,6 +9,7 @@ import InvitePage from "./pages/InvitePage";
 import DashboardPage from "./pages/DashboardPage";
 import StartPage from "./pages/StartPage";
 import NotFound from "./pages/NotFound";
+import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/invite/:inviteId?" element={<InvitePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/start" element={<StartPage />} />
+          <Route path="/faq" element={<FAQ />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

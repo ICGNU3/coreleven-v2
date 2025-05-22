@@ -5,12 +5,6 @@ import { CircleVisual } from '@/components/CircleVisual';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { NavBar } from '@/components/NavBar';
 import { Footer } from '@/components/Footer';
-import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 const Index = () => {
   const section2Ref = useRef<HTMLElement>(null);
@@ -127,53 +121,12 @@ const Index = () => {
                   <p className="text-stone-600">When your Grove is full, new dimensions emerge</p>
                 </div>
               </div>
-            </div>
-          </section>
-          
-          {/* SECTION 5: FAQs */}
-          <section className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24 border-t border-stone-200">
-            <div className="max-w-2xl mx-auto w-full">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8 text-center text-earth-700">
-                Questions You Might Be Asking
-              </h2>
               
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="py-4 text-lg font-medium text-earth-700">
-                    What's the goal of Coreleven?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-stone-700 pb-4">
-                    To grow in trusted circles of 11 through rhythm, clarity, and shared purpose.
-                  </AccordionContent>
-                </AccordionItem>
-                
-                <AccordionItem value="item-2">
-                  <AccordionTrigger className="py-4 text-lg font-medium text-earth-700">
-                    Is this a pyramid scheme?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-stone-700 pb-4">
-                    No. There's no top or payout. Value flows through aligned action.
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-3">
-                  <AccordionTrigger className="py-4 text-lg font-medium text-earth-700">
-                    What's expected of me?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-stone-700 pb-4">
-                    Build your Grove by inviting 10 people. That's it.
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-4">
-                  <AccordionTrigger className="py-4 text-lg font-medium text-earth-700">
-                    What do I tell people I want to invite?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-stone-700 pb-4">
-                    "I'm building a Grove — 11 people, one rhythm. I want you in mine."
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+              <div className="text-center mt-10">
+                <Link to="/faq" className="text-earth-600 hover:text-earth-800 underline transition-colors">
+                  View frequently asked questions →
+                </Link>
+              </div>
             </div>
           </section>
           
