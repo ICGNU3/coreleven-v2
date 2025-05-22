@@ -55,8 +55,8 @@ const Index = () => {
               
               <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm transform transition-all hover:shadow-md hover:scale-[1.01] duration-300">
                 <p className="text-lg md:text-xl text-stone-700 text-center mb-8 leading-relaxed">
-                  Coreleven is a simple, intentional structure. You build a Grove — a group of 11 — to grow 
-                  with clarity, rhythm, and aligned action.
+                  Coreleven is an intentional structure where you build a Grove — a group of 11 — to 
+                  grow with clarity, rhythm, and aligned action.
                 </p>
                 
                 <div className="flex justify-center">
@@ -96,13 +96,13 @@ const Index = () => {
                   <span className="text-earth-500 mr-4 flex-shrink-0">
                     <Clock className="h-6 w-6" />
                   </span>
-                  <span className="text-lg font-medium text-stone-800">Shape a new kind of rhythm-based structure</span>
+                  <span className="text-lg font-medium text-stone-800">Shape a rhythm-based structure</span>
                 </li>
                 <li className="flex items-center p-6 bg-white rounded-lg shadow-sm transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-md">
                   <span className="text-earth-500 mr-4 flex-shrink-0">
                     <Sprout className="h-6 w-6" />
                   </span>
-                  <span className="text-lg font-medium text-stone-800">This is the alpha. You are the first layer</span>
+                  <span className="text-lg font-medium text-stone-800">Join the alpha—become the first layer</span>
                 </li>
               </ul>
             </div>
@@ -174,7 +174,7 @@ const Index = () => {
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-4xl text-earth-300">"</div>
                 <p className="text-lg italic">
                   I build systems that help people grow with clarity, rhythm, and trust. 
-                  Coreleven is the structure I needed — so I made it real. Now it's yours too.
+                  Coreleven is the structure I needed—now it's yours.
                 </p>
                 <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-4xl text-earth-300">"</div>
               </div>
