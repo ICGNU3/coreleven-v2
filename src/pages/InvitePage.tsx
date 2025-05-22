@@ -11,27 +11,12 @@ import { useToast } from '@/hooks/use-toast';
 const InvitePage = () => {
   const { inviteId } = useParams();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
   
   // Mock data - in a real app, this would come from an API
   const inviterName = "Sarah Johnson";
   const filledSpots = 7;
   const isValidInvite = true;
-  
-  const handlePayment = async () => {
-    setLoading(true);
-    // Simulate payment process
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setLoading(false);
-    setJoined(true);
-    
-    toast({
-      title: "Welcome to Coreleven",
-      description: "Your payment was successful. You're now part of the circle.",
-      duration: 5000,
-    });
-  };
   
   if (!isValidInvite) {
     return (
@@ -145,10 +130,11 @@ const InvitePage = () => {
                       
                       <PrimaryButton 
                         className="w-full text-lg py-6" 
-                        onClick={handlePayment}
-                        disabled={loading}
+                        asChild
                       >
-                        {loading ? "Processing..." : "Pay $11.11 to Join"}
+                        <a href="https://whop.com/coreleven/" target="_blank" rel="noopener noreferrer">
+                          Join Coreleven
+                        </a>
                       </PrimaryButton>
                       
                       <p className="text-xs text-stone-500 mt-3 text-center">
