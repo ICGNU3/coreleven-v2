@@ -11,6 +11,7 @@ import StartPage from "./pages/StartPage";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import AboutPage from "./pages/AboutPage";
+import StartGrovePage from "./pages/StartGrovePage";
 import { ScrollToTop } from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/invite/:inviteId?" element={<InvitePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/start" element={<StartPage />} />
+          <Route path="/grove" element={<StartGrovePage />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/about" element={<AboutPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

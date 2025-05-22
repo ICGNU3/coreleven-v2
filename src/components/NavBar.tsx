@@ -16,6 +16,9 @@ export function NavBar({ className }: { className?: string }) {
         <Link to="/faq" className="text-sm text-stone-600 hover:text-earth-700 transition-colors">
           FAQ
         </Link>
+        <Link to="/grove" className="text-sm text-stone-600 hover:text-earth-700 transition-colors">
+          Build a Grove
+        </Link>
         <Link to="/invite" className="text-sm text-stone-600 hover:text-earth-700 transition-colors">
           I've been invited
         </Link>
