@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { CircleVisual } from '@/components/CircleVisual';
 import { PrimaryButton } from '@/components/PrimaryButton';
@@ -40,9 +40,6 @@ const Index = () => {
               </PrimaryButton>
             </div>
             
-            <div className="max-w-md mx-auto animate-pulse">
-              <CircleVisual filledCount={4} className="mb-6" />
-            </div>
             <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -61,10 +58,6 @@ const Index = () => {
                 Coreleven is a simple, intentional structure. You build a Grove — a group of 11 — to grow 
                 with clarity, rhythm, and aligned action.
               </p>
-
-              <div className="max-w-md mx-auto">
-                <CircleVisual filledCount={6} className="mb-6" />
-              </div>
             </div>
           </section>
           
@@ -207,7 +200,7 @@ const Index = () => {
             </div>
           </section>
           
-          {/* SECTION 7: Final CTA */}
+          {/* SECTION 7: Final CTA with Circle Visual */}
           <section className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24 text-center border-t border-stone-200">
             <div className="max-w-2xl mx-auto">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-6 text-earth-700">
