@@ -107,7 +107,7 @@ const InvitePage = () => {
                 </div>
                 
                 <p className="text-stone-500 text-sm mb-8">
-                  Remember, this was a one-time contribution of $11.11, not a recurring fee.
+                  Remember, this was a yearly subscription of $11.11 for alpha members. Future stages will have different subscription models.
                 </p>
                 
                 <div className="flex justify-center">
@@ -134,12 +134,12 @@ const InvitePage = () => {
                     <CircleVisual filledCount={filledSpots} className="mb-4" />
                     
                     <p className="text-lg font-medium text-earth-700 mb-8">
-                      Secure your spot with a one-time contribution
+                      Secure your spot with a yearly subscription
                     </p>
                     
                     <div className="bg-white p-6 rounded-lg shadow-sm w-full max-w-sm mb-6">
                       <div className="flex justify-between items-center mb-4">
-                        <span className="text-stone-600">One-time fee</span>
+                        <span className="text-stone-600">Yearly subscription (Alpha)</span>
                         <span className="text-xl font-medium text-earth-700">$11.11</span>
                       </div>
                       
@@ -152,7 +152,7 @@ const InvitePage = () => {
                       </PrimaryButton>
                       
                       <p className="text-xs text-stone-500 mt-3 text-center">
-                        This is a one-time contribution, not a subscription
+                        Special alpha member yearly rate. Future members will pay monthly.
                       </p>
                     </div>
                   </div>
