@@ -27,7 +27,7 @@ const Index = () => {
                 Trust and Believe. <span className="text-earth-600">Eleven is Enough.</span>
               </h1>
               <p className="text-xl md:text-2xl mb-12 text-stone-600 max-w-2xl mx-auto leading-relaxed">
-                A rhythm-based system for intentional growth. Start your Grove and connect with purpose.
+                A rhythmic network for plural growth, relational wealth, and sovereign coordination.
               </p>
               
               <div className="flex justify-center mb-16">
@@ -55,8 +55,8 @@ const Index = () => {
               
               <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm transform transition-all hover:shadow-md hover:scale-[1.01] duration-300">
                 <p className="text-lg md:text-xl text-stone-700 text-center mb-8 leading-relaxed">
-                  Coreleven is an intentional structure where you build a Grove — a group of 11 — to 
-                  grow with clarity, rhythm, and aligned action.
+                  Coreleven restores scale to the human level. A rhythm-based framework where Groves of 11 
+                  cultivate clarity, alignment, and symbolic structure through seasonal cycles.
                 </p>
                 
                 <div className="flex justify-center">
@@ -84,25 +84,25 @@ const Index = () => {
                   <span className="text-earth-500 mr-4 flex-shrink-0">
                     <Check className="h-6 w-6" />
                   </span>
-                  <span className="text-lg font-medium text-stone-800">Grow at your own pace, but never alone</span>
+                  <span className="text-lg font-medium text-stone-800">Grow plurally, at your rhythm, within relation</span>
                 </li>
                 <li className="flex items-center p-6 bg-white rounded-lg shadow-sm transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-md">
                   <span className="text-earth-500 mr-4 flex-shrink-0">
                     <Users className="h-6 w-6" />
                   </span>
-                  <span className="text-lg font-medium text-stone-800">Connect deeply with aligned people</span>
+                  <span className="text-lg font-medium text-stone-800">Build relational wealth through distributed trust</span>
                 </li>
                 <li className="flex items-center p-6 bg-white rounded-lg shadow-sm transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-md">
                   <span className="text-earth-500 mr-4 flex-shrink-0">
                     <Clock className="h-6 w-6" />
                   </span>
-                  <span className="text-lg font-medium text-stone-800">Shape a rhythm-based structure</span>
+                  <span className="text-lg font-medium text-stone-800">Move through cyclical seasons of 90 days</span>
                 </li>
                 <li className="flex items-center p-6 bg-white rounded-lg shadow-sm transform transition-transform duration-300 hover:scale-[1.02] hover:shadow-md">
                   <span className="text-earth-500 mr-4 flex-shrink-0">
                     <Sprout className="h-6 w-6" />
                   </span>
-                  <span className="text-lg font-medium text-stone-800">Join the alpha—become the first layer</span>
+                  <span className="text-lg font-medium text-stone-800">Join the foundation layer of a sovereign system</span>
                 </li>
               </ul>
             </div>
@@ -125,8 +125,8 @@ const Index = () => {
                     <span className="text-xl font-medium">1</span>
                     <span className="absolute animate-ripple w-16 h-16 rounded-full"></span>
                   </div>
-                  <h3 className="font-medium text-xl mb-3 text-earth-700">Say yes</h3>
-                  <p className="text-stone-600">Accept the invitation to join Coreleven</p>
+                  <h3 className="font-medium text-xl mb-3 text-earth-700">Initiation</h3>
+                  <p className="text-stone-600">Enter the rhythm through invitation</p>
                 </div>
                 
                 <div className="p-6 rounded-lg bg-white shadow-sm relative group hover:shadow-md transition-shadow">
@@ -135,8 +135,8 @@ const Index = () => {
                     <span className="text-xl font-medium">2</span>
                     <span className="absolute animate-ripple w-16 h-16 rounded-full" style={{ animationDelay: '0.3s' }}></span>
                   </div>
-                  <h3 className="font-medium text-xl mb-3 text-earth-700">Invite 10 people you trust</h3>
-                  <p className="text-stone-600">Build your Grove with intention</p>
+                  <h3 className="font-medium text-xl mb-3 text-earth-700">Growth</h3>
+                  <p className="text-stone-600">Build your Grove with 10 aligned souls</p>
                 </div>
                 
                 <div className="p-6 rounded-lg bg-white shadow-sm relative group hover:shadow-md transition-shadow">
@@ -145,8 +145,8 @@ const Index = () => {
                     <span className="text-xl font-medium">3</span>
                     <span className="absolute animate-ripple w-16 h-16 rounded-full" style={{ animationDelay: '0.6s' }}></span>
                   </div>
-                  <h3 className="font-medium text-xl mb-3 text-earth-700">Unlock the next layer</h3>
-                  <p className="text-stone-600">When your Grove is full, new dimensions emerge</p>
+                  <h3 className="font-medium text-xl mb-3 text-earth-700">Harvest</h3>
+                  <p className="text-stone-600">Unlock collective treasuries and new dimensions</p>
                 </div>
               </div>
               
@@ -173,8 +173,8 @@ const Index = () => {
               <div className="bg-white p-8 rounded-lg shadow-sm text-stone-700 relative max-w-2xl mx-auto transform transition-all hover:shadow-md hover:scale-[1.01] duration-300">
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-4xl text-earth-300">"</div>
                 <p className="text-lg italic">
-                  I build systems that help people grow with clarity, rhythm, and trust. 
-                  Coreleven is the structure I needed—now it's yours.
+                  I craft systems where human potential thrives through rhythm and relation. 
+                  Coreleven embodies this multidimensional approach.
                 </p>
                 <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-4xl text-earth-300">"</div>
               </div>
@@ -189,7 +189,7 @@ const Index = () => {
               </h2>
               
               <p className="text-lg text-stone-700 mb-12 max-w-2xl mx-auto">
-                This is the first door. You've seen the rhythm. You know if this is for you.
+                The first door opens. You sense the rhythm. You recognize your place.
               </p>
               
               <div className="flex flex-col items-center">
@@ -198,13 +198,13 @@ const Index = () => {
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
                       <div className="text-earth-700 font-semibold text-xl">Your Grove</div>
-                      <div className="text-stone-500">Starts with you</div>
+                      <div className="text-stone-500">Begins with you</div>
                     </div>
                   </div>
                 </div>
                 
                 <p className="text-stone-700 italic mb-10 text-lg max-w-2xl mx-auto">
-                  This stands as pure rhythm.<br />
+                  Pure rhythm manifests.<br />
                   A circle you shape. A system that grows.
                 </p>
                 
