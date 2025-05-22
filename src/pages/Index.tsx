@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { CircleVisual } from '@/components/CircleVisual';
@@ -203,8 +204,8 @@ const Index = () => {
                 </div>
                 
                 <p className="text-stone-700 italic mb-10 text-lg max-w-2xl mx-auto">
-                  This isn't content. It's not a community.<br />
-                  It's a rhythm you carry. A circle you shape. A system that grows.
+                  This stands as pure rhythm.<br />
+                  A circle you shape. A system that grows.
                 </p>
                 
                 <PrimaryButton size="lg" asChild className="shadow-lg hover:shadow-xl transition-all group">
