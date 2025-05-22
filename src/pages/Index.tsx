@@ -1,173 +1,249 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { CircleVisual } from '@/components/CircleVisual';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { NavBar } from '@/components/NavBar';
 import { Footer } from '@/components/Footer';
+import { 
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Index = () => {
+  const section2Ref = useRef<HTMLElement>(null);
+  
+  const scrollToNextSection = () => {
+    section2Ref.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="container max-w-5xl mx-auto px-4">
         <NavBar />
         
         <main className="flex-grow">
-          {/* Hero Section */}
-          <section className="py-16 md:py-24 text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium mb-4 text-earth-800">
+          {/* SECTION 1: Hero Section */}
+          <section className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium mb-4 text-earth-800 text-center">
               Trust and Believe. Eleven is Enough.
             </h1>
-            <p className="text-xl md:text-2xl mb-10 text-stone-600 max-w-2xl mx-auto">
-              A living system for personal growth built in circles of 11. Start yours today.
+            <p className="text-xl md:text-2xl mb-10 text-stone-600 max-w-2xl mx-auto text-center">
+              A rhythm-based system for personal growth. Start your Grove now.
             </p>
             
             <div className="flex justify-center mb-16">
-              <PrimaryButton size="lg" asChild>
-                <Link to="/start">Begin Building Your Grove</Link>
+              <PrimaryButton size="lg" onClick={scrollToNextSection}>
+                Begin Building My Grove
               </PrimaryButton>
             </div>
             
-            <div className="max-w-md mx-auto">
+            <div className="max-w-md mx-auto animate-pulse">
               <CircleVisual filledCount={4} className="mb-6" />
+            </div>
+            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
           </section>
           
-          {/* What is Coreleven Section */}
-          <section className="py-12 border-t border-stone-200">
+          {/* SECTION 2: What is Coreleven Section */}
+          <section ref={section2Ref} className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24 border-t border-stone-200">
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-medium mb-6 text-center text-earth-700">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8 text-center text-earth-700">
                 What is Coreleven?
               </h2>
               
-              <p className="text-stone-700 text-center">
-                Coreleven is a rhythm-based structure. Each person builds a Grove — a group of 11 — rooted in trust, 
-                shared clarity, and mutual momentum. This is a system for people who want to grow with intention, not noise.
+              <p className="text-lg md:text-xl text-stone-700 text-center mb-12">
+                Coreleven is a simple, intentional structure. You build a Grove — a group of 11 — to grow 
+                with clarity, rhythm, and aligned action.
               </p>
+
+              <div className="max-w-md mx-auto">
+                <CircleVisual filledCount={6} className="mb-6" />
+              </div>
             </div>
           </section>
           
-          {/* Why Now Section */}
-          <section className="py-12 bg-earth-50 rounded-lg">
+          {/* SECTION 3: Why It Matters */}
+          <section className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24 bg-earth-50 rounded-lg">
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-medium mb-6 text-center text-earth-700">
-                Why Now?
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8 text-center text-earth-700">
+                Why It Matters
               </h2>
               
-              <ul className="space-y-3 text-stone-700">
-                <li className="flex items-start">
-                  <span className="text-earth-500 mr-2">•</span>
-                  <span>Help shape the first cycle of Coreleven</span>
+              <ul className="space-y-6 text-stone-700 max-w-xl mx-auto">
+                <li className="flex items-center p-4 bg-white rounded-lg shadow-sm transform transition-transform duration-500 hover:scale-102">
+                  <span className="text-earth-500 mr-4 text-2xl">•</span>
+                  <span className="text-lg">Grow at your own pace, but not alone</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="text-earth-500 mr-2">•</span>
-                  <span>Build your Grove and unlock deeper access</span>
+                <li className="flex items-center p-4 bg-white rounded-lg shadow-sm transform transition-transform duration-500 hover:scale-102">
+                  <span className="text-earth-500 mr-4 text-2xl">•</span>
+                  <span className="text-lg">Connect deeply with aligned people</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="text-earth-500 mr-2">•</span>
-                  <span>Join a founding layer of rhythm-holders</span>
+                <li className="flex items-center p-4 bg-white rounded-lg shadow-sm transform transition-transform duration-500 hover:scale-102">
+                  <span className="text-earth-500 mr-4 text-2xl">•</span>
+                  <span className="text-lg">Shape a new kind of rhythm-based structure</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="text-earth-500 mr-2">•</span>
-                  <span>Align with a new kind of structure — clear, minimal, human</span>
+                <li className="flex items-center p-4 bg-white rounded-lg shadow-sm transform transition-transform duration-500 hover:scale-102">
+                  <span className="text-earth-500 mr-4 text-2xl">•</span>
+                  <span className="text-lg">This is the alpha. You are the first layer</span>
                 </li>
               </ul>
             </div>
           </section>
           
-          {/* How It Works Section */}
-          <section className="py-12 border-t border-stone-200">
+          {/* SECTION 4: How It Works */}
+          <section className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24 border-t border-stone-200">
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-medium mb-6 text-center text-earth-700">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8 text-center text-earth-700">
                 How It Works
               </h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div className="p-6 rounded-lg bg-earth-50">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-earth-500 text-white mb-4">
-                    1
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div className="p-6 rounded-lg bg-earth-50 relative group">
+                  <div className="absolute inset-0 bg-earth-500 opacity-0 rounded-lg transform scale-95 group-hover:scale-100 group-hover:opacity-5 transition-all duration-300"></div>
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-earth-500 text-white mb-4 relative">
+                    <span className="text-xl">1</span>
+                    <span className="absolute animate-ripple w-16 h-16 rounded-full"></span>
                   </div>
-                  <h3 className="font-medium text-lg mb-2 text-earth-700">Step into the system</h3>
+                  <h3 className="font-medium text-xl mb-2 text-earth-700">Say yes</h3>
+                  <p className="text-stone-600">Accept the invitation to join Coreleven</p>
                 </div>
                 
-                <div className="p-6 rounded-lg bg-earth-50">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-earth-500 text-white mb-4">
-                    2
+                <div className="p-6 rounded-lg bg-earth-50 relative group">
+                  <div className="absolute inset-0 bg-earth-500 opacity-0 rounded-lg transform scale-95 group-hover:scale-100 group-hover:opacity-5 transition-all duration-300"></div>
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-earth-500 text-white mb-4 relative">
+                    <span className="text-xl">2</span>
+                    <span className="absolute animate-ripple w-16 h-16 rounded-full" style={{ animationDelay: '0.3s' }}></span>
                   </div>
-                  <h3 className="font-medium text-lg mb-2 text-earth-700">Build your Grove by inviting 10 aligned people</h3>
+                  <h3 className="font-medium text-xl mb-2 text-earth-700">Invite 10 people you trust</h3>
+                  <p className="text-stone-600">Build your Grove with intention</p>
                 </div>
                 
-                <div className="p-6 rounded-lg bg-earth-50">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-earth-500 text-white mb-4">
-                    3
+                <div className="p-6 rounded-lg bg-earth-50 relative group">
+                  <div className="absolute inset-0 bg-earth-500 opacity-0 rounded-lg transform scale-95 group-hover:scale-100 group-hover:opacity-5 transition-all duration-300"></div>
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-earth-500 text-white mb-4 relative">
+                    <span className="text-xl">3</span>
+                    <span className="absolute animate-ripple w-16 h-16 rounded-full" style={{ animationDelay: '0.6s' }}></span>
                   </div>
-                  <h3 className="font-medium text-lg mb-2 text-earth-700">Complete your Grove and access what's next</h3>
+                  <h3 className="font-medium text-xl mb-2 text-earth-700">Unlock the next layer</h3>
+                  <p className="text-stone-600">When your Grove is full, new dimensions emerge</p>
                 </div>
               </div>
             </div>
           </section>
           
-          {/* Questions Section */}
-          <section className="py-12 border-t border-stone-200">
-            <div className="max-w-2xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-medium mb-6 text-center text-earth-700">
+          {/* SECTION 5: FAQs */}
+          <section className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24 border-t border-stone-200">
+            <div className="max-w-2xl mx-auto w-full">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8 text-center text-earth-700">
                 Questions You Might Be Asking
               </h2>
               
-              <div className="space-y-4 mb-6">
-                <div className="p-4 bg-stone-100 rounded-lg">
-                  <h3 className="font-medium text-earth-700">What's the goal of this?</h3>
-                </div>
-                <div className="p-4 bg-stone-100 rounded-lg">
-                  <h3 className="font-medium text-earth-700">Is this one of those weird invite things?</h3>
-                </div>
-                <div className="p-4 bg-stone-100 rounded-lg">
-                  <h3 className="font-medium text-earth-700">What am I expected to do?</h3>
-                </div>
-                <div className="p-4 bg-stone-100 rounded-lg">
-                  <h3 className="font-medium text-earth-700">What do I tell people I want to invite?</h3>
-                </div>
-              </div>
-              
-              <p className="text-center text-stone-600">
-                Answers will open clearly, one click away.
-              </p>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="py-4 text-lg font-medium text-earth-700">
+                    What's the goal of Coreleven?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-stone-700 pb-4">
+                    To grow in trusted circles of 11 through rhythm, clarity, and shared purpose.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-2">
+                  <AccordionTrigger className="py-4 text-lg font-medium text-earth-700">
+                    Is this a pyramid scheme?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-stone-700 pb-4">
+                    No. There's no top or payout. Value flows through aligned action.
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-3">
+                  <AccordionTrigger className="py-4 text-lg font-medium text-earth-700">
+                    What's expected of me?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-stone-700 pb-4">
+                    Build your Grove by inviting 10 people. That's it.
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-4">
+                  <AccordionTrigger className="py-4 text-lg font-medium text-earth-700">
+                    What do I tell people I want to invite?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-stone-700 pb-4">
+                    "I'm building a Grove — 11 people, one rhythm. I want you in mine."
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </section>
           
-          {/* About the Creator Section */}
-          <section className="py-12 border-t border-stone-200">
+          {/* SECTION 6: About the Founder */}
+          <section className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24 border-t border-stone-200">
             <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-2xl md:text-3xl font-medium mb-6 text-earth-700">
-                About the Creator
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8 text-earth-700">
+                About the Founder
               </h2>
               
-              <h3 className="font-medium text-xl mb-2 text-earth-700">Israel Wilson</h3>
-              <p className="text-stone-600 mb-6">
-                Builder of systems that help people grow with clarity, rhythm, and trust.
+              <h3 className="font-medium text-2xl mb-3 text-earth-700">Israel Wilson</h3>
+              <p className="text-stone-600 mb-8 text-lg">
+                I build systems that help people grow with clarity, rhythm, and trust. 
+                Coreleven is the structure I needed — so I made it real.
               </p>
               
-              <div className="bg-stone-100 p-6 rounded-lg italic text-stone-700">
-                "I needed something like this. So I made it real. Now it's yours too."
+              <div className="bg-stone-100 p-8 rounded-lg italic text-stone-700 relative">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-4xl text-earth-300">"</div>
+                <p className="text-lg">
+                  I needed something like this. So I made it real. Now it's yours too.
+                </p>
+                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-4xl text-earth-300">"</div>
               </div>
             </div>
           </section>
           
-          {/* Final Invitation Section */}
-          <section className="py-12 text-center border-t border-stone-200">
+          {/* SECTION 7: Final CTA */}
+          <section className="min-h-screen flex flex-col justify-center items-center py-16 md:py-24 text-center border-t border-stone-200">
             <div className="max-w-2xl mx-auto">
-              <p className="text-stone-700 mb-6">
-                This isn't content. It's not a community.<br />
-                It's a rhythm you carry. A circle you shape. A system that grows.
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-6 text-earth-700">
+                Ready to Begin?
+              </h2>
+              
+              <p className="text-lg text-stone-700 mb-10">
+                This is the first door. You've seen the rhythm. You know if this is for you.
               </p>
               
-              <p className="text-stone-700 mb-8">
-                Start with one. Then build your 10. Let the rhythm begin.
-              </p>
-              
-              <PrimaryButton size="lg" asChild>
-                <Link to="/start">Begin Now</Link>
-              </PrimaryButton>
+              <div className="flex flex-col items-center">
+                <div className="relative mb-12">
+                  <CircleVisual filledCount={0} />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-earth-700 font-medium">Your Grove</div>
+                      <div className="text-sm text-stone-500">Starts with you</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="text-stone-700 italic mb-8">
+                  This isn't content. It's not a community.<br />
+                  It's a rhythm you carry. A circle you shape. A system that grows.
+                </p>
+                
+                <PrimaryButton size="lg" asChild>
+                  <a href="https://whop.com/" target="_blank" rel="noopener noreferrer">
+                    Complete My Entry
+                  </a>
+                </PrimaryButton>
+                
+                <p className="text-sm text-stone-500 mt-4">
+                  A one-time payment of $11.11 secures your position.
+                </p>
+              </div>
             </div>
           </section>
         </main>
