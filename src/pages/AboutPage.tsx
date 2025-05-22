@@ -19,70 +19,54 @@ const AboutPage = () => {
             
             <div className="prose prose-stone max-w-none text-stone-700">
               <p className="text-lg">
-                Coreleven is not a brand. It's not a course. It's not a community in the traditional sense. 
-                It's a rhythm — one that begins with a single person and unfolds outward in quiet, intentional waves.
+                Coreleven is a rhythm-based structure for intentional growth. It begins with one person and unfolds through small, trust-centered circles called Groves.
               </p>
               
               <p>
-                We believe that clarity is more powerful than hype, and trust is more sustainable than influence. 
-                In a world flooded with noise, Coreleven offers something rare: a return to pace, to pattern, to rooted connection.
+                Clarity powers momentum. Trust sustains it. In a world full of noise, Coreleven creates space for people to move with purpose and grow through rhythm.
               </p>
               
               <p>
-                At the center of Coreleven is a structure we call a Grove: a group of eleven people. 
-                You build yours by inviting ten people you trust, respect, or are curious to grow with. 
-                Once your Grove is complete, it becomes a live node in a growing network — one that's designed 
-                to evolve through shared reflection, seasonal rhythms, and symbolic acts of commitment.
+                At the core of the system is the Grove: a group of eleven people. You begin by inviting ten people you trust, respect, or want to grow with. When your Grove is complete, it becomes an active part of a living network designed to support reflection, shared pace, and meaningful action.
               </p>
               
               <p>
-                Each Grove is autonomous but connected. There are no bosses. No gatekeepers. No hierarchies. 
-                Just circles of intention, held together by a simple idea: that eleven is enough to begin anything meaningful.
+                Each Grove defines its rhythm. Circles connect without hierarchy. Growth moves through aligned actions and rituals, not roles or titles. The idea is simple: eleven is enough to begin.
               </p>
               
               <p>
-                We don't promise transformation. We don't sell content. We offer structure — light, clear, 
-                and flexible enough to hold growth. That structure includes:
+                Coreleven offers a light, flexible structure:
               </p>
               
               <ul className="my-6 space-y-2">
                 <li className="flex items-start">
                   <span className="text-earth-500 mr-2">•</span>
-                  <span>A simple onboarding rhythm</span>
+                  <span>Onboarding rhythm to start with clarity</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-earth-500 mr-2">•</span>
-                  <span>A symbolic threshold for completion</span>
+                  <span>Symbolic recognition of Grove completion</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-earth-500 mr-2">•</span>
-                  <span>Access to deeper tools and shared rituals</span>
+                  <span>Access to tools and practices for reflection</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-earth-500 mr-2">•</span>
-                  <span>A steward layer that evolves through action</span>
+                  <span>A steward layer shaped by contribution</span>
                 </li>
               </ul>
               
               <p>
-                In the alpha phase, we're keeping this close. Each Grove is formed by invitation. 
-                The first 111 completed Groves will form the foundation. After that, the system opens wider — 
-                and grows based on rhythm, not reach.
+                The alpha phase is invitation-based. The first 111 completed Groves form the foundation. From there, the system grows through aligned expansion.
               </p>
               
               <p>
-                Coreleven is being stewarded by Israel Wilson, a systems builder, artist, and cultural architect. 
-                The system reflects decades of lived experience designing structures that hold complexity without 
-                collapsing into chaos. This isn't a hobby. This isn't a hustle. This is the life's work of someone 
-                who believes that structure can be sacred — and that sacredness can scale.
+                Coreleven is stewarded by Israel Wilson, a systems builder, artist, and cultural architect. The design reflects a commitment to building structures that hold complexity with care and precision. It's a framework born from lived experience and focused on long-term resonance.
               </p>
               
               <p>
-                You don't need to understand everything. You don't need to explain it. You just need to feel it.
-              </p>
-              
-              <p>
-                If this feels like something real — something rooted — then you already know what to do.
+                You don't need to explain it. You'll know if it fits. If it does, begin.
               </p>
               
               <p>
