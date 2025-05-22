@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { CircleVisual } from '@/components/CircleVisual';
@@ -169,15 +168,12 @@ const Index = () => {
               </h2>
               
               <h3 className="font-medium text-2xl mb-4 text-earth-700">Israel Wilson</h3>
-              <p className="text-stone-700 mb-10 text-lg max-w-2xl mx-auto">
-                I build systems that help people grow with clarity, rhythm, and trust. 
-                Coreleven is the structure I needed — so I made it real.
-              </p>
               
               <div className="bg-white p-8 rounded-lg shadow-sm text-stone-700 relative max-w-2xl mx-auto transform transition-all hover:shadow-md hover:scale-[1.01] duration-300">
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-4xl text-earth-300">"</div>
                 <p className="text-lg italic">
-                  I needed something like this. So I made it real. Now it's yours too.
+                  I build systems that help people grow with clarity, rhythm, and trust. 
+                  Coreleven is the structure I needed — so I made it real. Now it's yours too.
                 </p>
                 <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-4xl text-earth-300">"</div>
               </div>
