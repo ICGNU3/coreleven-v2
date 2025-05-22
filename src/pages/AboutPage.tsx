@@ -17,7 +17,7 @@ const AboutPage = () => {
               About Coreleven
             </h1>
             
-            <div className="prose prose-stone max-w-none text-stone-700">
+            <div className="prose prose-stone max-w-none text-stone-700 space-y-6">
               <p className="text-lg">
                 Coreleven is a rhythm-based structure for intentional growth. It begins with one person and unfolds through small, trust-centered circles called Groves.
               </p>
