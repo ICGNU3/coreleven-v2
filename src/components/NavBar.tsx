@@ -16,12 +16,22 @@ export function NavBar({ className }: { className?: string }) {
         <Link to="/faq" className="text-sm text-stone-600 hover:text-earth-700 transition-colors">
           FAQ
         </Link>
-        <Link to="/grove" className="text-sm text-stone-600 hover:text-earth-700 transition-colors">
+        <a 
+          href="https://whop.com/coreleven/" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-stone-600 hover:text-earth-700 transition-colors"
+        >
           Build a Grove
-        </Link>
-        <Link to="/invite" className="text-sm text-stone-600 hover:text-earth-700 transition-colors">
+        </a>
+        <a 
+          href="https://whop.com/coreleven/" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-stone-600 hover:text-earth-700 transition-colors"
+        >
           I've been invited
-        </Link>
+        </a>
       </div>
     </nav>
   );
