@@ -11,6 +11,7 @@ import StartPage from "./pages/StartPage";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import AboutPage from "./pages/AboutPage";
+import { ScrollToTop } from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/invite/:inviteId?" element={<InvitePage />} />
