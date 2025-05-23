@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
@@ -17,6 +16,11 @@ const InvitePage = () => {
   const inviterName = "Sarah Johnson";
   const filledSpots = 7;
   const isValidInvite = true;
+  
+  const handleJoinClick = () => {
+    // Open the payment page in a new tab
+    window.open('https://whop.com/checkout/plan_cziunPsrmj1gO/', '_blank');
+  };
   
   if (!isValidInvite) {
     return (
@@ -53,7 +57,6 @@ const InvitePage = () => {
         <main className="flex-grow py-12">
           <div className="max-w-xl mx-auto">
             {joined ? (
-              // After successful payment
               <div className="text-center">
                 <div className="mb-8 inline-block p-3 rounded-full bg-earth-100">
                   <svg 
@@ -102,7 +105,6 @@ const InvitePage = () => {
                 </div>
               </div>
             ) : (
-              // Initial invite page
               <div>
                 <div className="text-center mb-8">
                   <h1 className="text-2xl md:text-3xl font-medium mb-4 text-earth-700">
@@ -130,11 +132,9 @@ const InvitePage = () => {
                       
                       <PrimaryButton 
                         className="w-full text-lg py-6" 
-                        asChild
+                        onClick={handleJoinClick}
                       >
-                        <a href="https://whop.com/checkout/plan_cziunPsrmj1gO/" target="_blank" rel="noopener noreferrer">
-                          Join Coreleven
-                        </a>
+                        Join Coreleven
                       </PrimaryButton>
                       
                       <p className="text-xs text-stone-500 mt-3 text-center">
