@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
@@ -6,11 +7,17 @@ import { CircleVisual } from '@/components/CircleVisual';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
 
 const InvitePage = () => {
   const { inviteId } = useParams();
   const { toast } = useToast();
   const [joined, setJoined] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Mock data - in a real app, this would come from an API
   const inviterName = "Sarah Johnson";
@@ -18,8 +25,21 @@ const InvitePage = () => {
   const isValidInvite = true;
   
   const handleJoinClick = () => {
-    // Use window.location.href instead of window.open to ensure proper redirect
-    window.location.href = 'https://whop.com/checkout/ius12MAWrV2VBT1mN-wN5P-HlWU-uCcK-XkHgsweoqtfO/';
+    setShowPaymentForm(true);
+  };
+
+  const handlePaymentSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate payment processing
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setJoined(true);
+      toast({
+        title: "Welcome to Coreleven",
+        description: "Your payment was successful and your spot is secure.",
+      });
+    }, 1500);
   };
   
   if (!isValidInvite) {
@@ -125,27 +145,70 @@ const InvitePage = () => {
                     </p>
                     
                     <div className="bg-white p-6 rounded-lg shadow-sm w-full max-w-sm mb-6">
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="text-stone-600">Yearly subscription (Alpha)</span>
-                        <span className="text-xl font-medium text-earth-700">$11.11</span>
-                      </div>
-                      
-                      <a 
-                        href="https://whop.com/checkout/ius12MAWrV2VBT1mN-wN5P-HlWU-uCcK-XkHgsweoqtfO/" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="block w-full"
-                      >
-                        <PrimaryButton 
-                          className="w-full text-lg py-6"
-                        >
-                          Join Coreleven
-                        </PrimaryButton>
-                      </a>
-                      
-                      <p className="text-xs text-stone-500 mt-3 text-center">
-                        Special alpha member yearly rate. Future members will pay monthly.
-                      </p>
+                      {showPaymentForm ? (
+                        <form onSubmit={handlePaymentSubmit} className="space-y-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="name">Full Name</Label>
+                            <Input id="name" type="text" required placeholder="Your name" />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="email">Email Address</Label>
+                            <Input id="email" type="email" required placeholder="your@email.com" />
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-2">
+                              <Label htmlFor="card">Card Number</Label>
+                              <Input id="card" required placeholder="1234 5678 9012 3456" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="expiry">Expiry</Label>
+                              <div className="grid grid-cols-2 gap-2">
+                                <Input id="expiry" required placeholder="MM/YY" className="col-span-1" />
+                                <Input id="cvc" required placeholder="CVC" className="col-span-1" />
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="border-t border-gray-200 my-4 pt-4">
+                            <div className="flex justify-between items-center mb-4">
+                              <span className="text-stone-600">Yearly subscription (Alpha)</span>
+                              <span className="text-xl font-medium text-earth-700">$11.11</span>
+                            </div>
+                          </div>
+                          
+                          <PrimaryButton 
+                            className="w-full text-lg py-6"
+                            type="submit"
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? "Processing..." : "Complete My Entry"}
+                          </PrimaryButton>
+                          
+                          <p className="text-xs text-stone-500 mt-3 text-center">
+                            Special alpha member yearly rate. Future members will pay monthly.
+                          </p>
+                        </form>
+                      ) : (
+                        <>
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="text-stone-600">Yearly subscription (Alpha)</span>
+                            <span className="text-xl font-medium text-earth-700">$11.11</span>
+                          </div>
+                          
+                          <PrimaryButton 
+                            className="w-full text-lg py-6"
+                            onClick={handleJoinClick}
+                          >
+                            Join Coreleven
+                          </PrimaryButton>
+                          
+                          <p className="text-xs text-stone-500 mt-3 text-center">
+                            Special alpha member yearly rate. Future members will pay monthly.
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
