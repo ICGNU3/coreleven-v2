@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
@@ -19,7 +20,7 @@ const InvitePage = () => {
   
   const handleJoinClick = () => {
     // Open the payment page in a new tab
-    window.open('https://whop.com/checkout/plan_cziunPsrmj1gO/', '_blank');
+    window.open('https://whop.com/checkout/ius12MAWrV2VBT1mN-wN5P-HlWU-uCcK-XkHgsweoqtfO/', '_blank');
   };
   
   if (!isValidInvite) {
