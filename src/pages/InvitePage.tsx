@@ -9,8 +9,6 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
 
 const InvitePage = () => {
   const { inviteId } = useParams();
@@ -25,7 +23,8 @@ const InvitePage = () => {
   const isValidInvite = true;
   
   const handleJoinClick = () => {
-    setShowPaymentForm(true);
+    // Direct link to whop checkout - open in new tab
+    window.open('https://whop.com/checkout/ius12MAWrV2VBT1mN-wN5P-HlWU-uCcK-XkHgsweoqtfO/', '_blank', 'noopener,noreferrer');
   };
 
   const handlePaymentSubmit = (e) => {
