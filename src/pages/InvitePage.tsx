@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
@@ -19,8 +18,8 @@ const InvitePage = () => {
   const isValidInvite = true;
   
   const handleJoinClick = () => {
-    // Open the payment page in a new tab
-    window.open('https://whop.com/checkout/ius12MAWrV2VBT1mN-wN5P-HlWU-uCcK-XkHgsweoqtfO/', '_blank');
+    // Use window.location.href instead of window.open to ensure proper redirect
+    window.location.href = 'https://whop.com/checkout/ius12MAWrV2VBT1mN-wN5P-HlWU-uCcK-XkHgsweoqtfO/';
   };
   
   if (!isValidInvite) {
@@ -131,12 +130,18 @@ const InvitePage = () => {
                         <span className="text-xl font-medium text-earth-700">$11.11</span>
                       </div>
                       
-                      <PrimaryButton 
-                        className="w-full text-lg py-6" 
-                        onClick={handleJoinClick}
+                      <a 
+                        href="https://whop.com/checkout/ius12MAWrV2VBT1mN-wN5P-HlWU-uCcK-XkHgsweoqtfO/" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="block w-full"
                       >
-                        Join Coreleven
-                      </PrimaryButton>
+                        <PrimaryButton 
+                          className="w-full text-lg py-6"
+                        >
+                          Join Coreleven
+                        </PrimaryButton>
+                      </a>
                       
                       <p className="text-xs text-stone-500 mt-3 text-center">
                         Special alpha member yearly rate. Future members will pay monthly.
