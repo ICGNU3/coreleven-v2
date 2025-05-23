@@ -132,7 +132,7 @@ const InvitePage = () => {
                         className="w-full text-lg py-6" 
                         asChild
                       >
-                        <a href="https://whop.com/coreleven/" target="_blank" rel="noopener noreferrer">
+                        <a href="https://whop.com/checkout/plan_cziunPsrmj1gO/" target="_blank" rel="noopener noreferrer">
                           Join Coreleven
                         </a>
                       </PrimaryButton>
