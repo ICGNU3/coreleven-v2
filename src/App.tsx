@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import InvitePage from "./pages/InvitePage";
 import DashboardPage from "./pages/DashboardPage";
 import StartPage from "./pages/StartPage";
+import SignupPage from "./pages/SignupPage";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import AboutPage from "./pages/AboutPage";
@@ -25,6 +26,7 @@ const App = () => (
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/signup" element={<SignupPage />} />
           <Route path="/invite/:inviteId?" element={<InvitePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/start" element={<StartPage />} />

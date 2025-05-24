@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { CircleVisual } from '@/components/CircleVisual';
@@ -209,10 +208,10 @@ const Index = () => {
                 </p>
                 
                 <PrimaryButton size="lg" asChild className="shadow-lg hover:shadow-xl transition-all group">
-                  <a href="https://whop.com/" target="_blank" rel="noopener noreferrer">
-                    Complete My Entry
+                  <Link to="/signup">
+                    Begin Your Grove
                     <Sprout className="ml-1 h-5 w-5 group-hover:scale-110 transition-transform" />
-                  </a>
+                  </Link>
                 </PrimaryButton>
                 
                 <p className="text-sm text-stone-500 mt-4">
