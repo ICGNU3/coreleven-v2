@@ -42,15 +42,13 @@ export function NavBar({ className }: { className?: string }) {
                 >
                   FAQ
                 </Link>
-                <a 
-                  href="https://whop.com/coreleven/" 
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link 
+                  to="/grove" 
                   className="block px-4 py-2 text-sm text-stone-600 hover:bg-earth-50 hover:text-earth-700 transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
                   Build a Grove
-                </a>
+                </Link>
                 <a 
                   href="https://whop.com/coreleven/" 
                   target="_blank"
@@ -71,14 +69,12 @@ export function NavBar({ className }: { className?: string }) {
             <Link to="/faq" className="text-sm font-medium text-stone-600 hover:text-earth-700 transition-colors hover:underline">
               FAQ
             </Link>
-            <a 
-              href="https://whop.com/coreleven/" 
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link 
+              to="/grove" 
               className="text-sm font-medium text-stone-600 hover:text-earth-700 transition-colors hover:underline"
             >
               Build a Grove
-            </a>
+            </Link>
             <a 
               href="https://whop.com/coreleven/" 
               target="_blank"
