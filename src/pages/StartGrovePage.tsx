@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
@@ -56,7 +55,7 @@ const StartGrovePage = () => {
               
               <div className="flex justify-center my-6">
                 <PrimaryButton size="lg" asChild>
-                  <Link to="/start">Join Coreleven Now</Link>
+                  <Link to="/signup">Join Coreleven Now</Link>
                 </PrimaryButton>
               </div>
             </div>

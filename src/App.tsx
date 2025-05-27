@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import InvitePage from "./pages/InvitePage";
 import DashboardPage from "./pages/DashboardPage";
-import StartPage from "./pages/StartPage";
 import SignupPage from "./pages/SignupPage";
 import GroveCompletePage from "./pages/GroveCompletePage";
 import NotFound from "./pages/NotFound";
@@ -31,7 +30,6 @@ const App = () => (
           <Route path="/invite/:inviteId?" element={<InvitePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/grove-complete" element={<GroveCompletePage />} />
-          <Route path="/start" element={<StartPage />} />
           <Route path="/grove" element={<StartGrovePage />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/about" element={<AboutPage />} />
