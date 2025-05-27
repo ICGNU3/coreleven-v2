@@ -13,7 +13,6 @@ export function CircleVisual({
   filledCount = 0, 
   totalCount = 11 
 }: CircleVisualProps) {
-  // Size and positioning calculations
   const size = 280;
   const centerX = size / 2;
   const centerY = size / 2;
@@ -22,10 +21,10 @@ export function CircleVisual({
   // Calculate positions for all circles
   const positions = [];
   
-  // First, add the center point
+  // Center position (the user)
   positions.push({ x: centerX, y: centerY });
   
-  // Then add positions for the outer circle
+  // Outer circle positions (the invites)
   const outerCircles = totalCount - 1;
   for (let i = 0; i < outerCircles; i++) {
     const angle = (i * 2 * Math.PI) / outerCircles - Math.PI / 2;
@@ -40,65 +39,121 @@ export function CircleVisual({
         width={size} 
         height={size} 
         viewBox={`0 0 ${size} ${size}`} 
-        className="transform transition-transform duration-1000 ease-in-out"
+        className="transform transition-all duration-1000 ease-in-out"
       >
-        {/* Connection lines */}
-        {positions.slice(1).map((pos, index) => (
-          <line 
-            key={`line-${index}`}
-            x1={centerX}
-            y1={centerY}
-            x2={pos.x}
-            y2={pos.y}
-            stroke={index < filledCount ? 'rgba(138, 126, 96, 0.7)' : 'rgba(159, 158, 161, 0.3)'}
-            strokeWidth={index < filledCount ? 1.5 : 0.8}
-            className="transition-all duration-700"
-          />
-        ))}
+        {/* Gentle background circle */}
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={radius + 30}
+          fill="rgba(138, 126, 96, 0.05)"
+          stroke="rgba(138, 126, 96, 0.1)"
+          strokeWidth={1}
+        />
         
-        {/* Outer circles */}
-        {positions.slice(1).map((pos, index) => (
+        {/* Connection lines with organic curves */}
+        {positions.slice(1).map((pos, index) => {
+          const isFilled = index < filledCount;
+          const midX = (centerX + pos.x) / 2;
+          const midY = (centerY + pos.y) / 2;
+          const offset = 15 * Math.sin(index * 0.8); // Organic curve
+          
+          return (
+            <path
+              key={`line-${index}`}
+              d={`M ${centerX} ${centerY} Q ${midX + offset} ${midY + offset} ${pos.x} ${pos.y}`}
+              stroke={isFilled ? 'rgba(106, 95, 68, 0.6)' : 'rgba(210, 210, 214, 0.4)'}
+              strokeWidth={isFilled ? 2 : 1}
+              fill="none"
+              className="transition-all duration-700"
+            />
+          );
+        })}
+        
+        {/* Outer circles (invites) */}
+        {positions.slice(1).map((pos, index) => {
+          const isFilled = index < filledCount;
+          
+          return (
+            <g key={`circle-${index}`}>
+              {/* Subtle glow for filled circles */}
+              {isFilled && (
+                <circle
+                  cx={pos.x}
+                  cy={pos.y}
+                  r={20}
+                  fill="rgba(106, 95, 68, 0.1)"
+                  className="animate-pulse"
+                />
+              )}
+              
+              <circle
+                cx={pos.x}
+                cy={pos.y}
+                r={16}
+                fill={isFilled ? 'rgba(106, 95, 68, 0.9)' : 'rgba(245, 245, 247, 0.8)'}
+                stroke={isFilled ? 'rgba(74, 66, 48, 0.8)' : 'rgba(210, 210, 214, 0.6)'}
+                strokeWidth={isFilled ? 2 : 1.5}
+                className="transition-all duration-500"
+              />
+              
+              {/* Small inner dot for visual interest */}
+              {isFilled && (
+                <circle
+                  cx={pos.x}
+                  cy={pos.y}
+                  r={4}
+                  fill="rgba(245, 245, 247, 0.9)"
+                />
+              )}
+            </g>
+          );
+        })}
+        
+        {/* Center circle (the user) - always filled */}
+        <g>
+          {/* Gentle pulse ring */}
           <circle
-            key={`circle-${index}`}
-            cx={pos.x}
-            cy={pos.y}
-            r={16}
-            fill={index < filledCount ? 'rgba(138, 126, 96, 0.9)' : 'rgba(230, 230, 232, 0.7)'}
-            stroke={index < filledCount ? 'rgba(106, 95, 68, 0.6)' : 'rgba(171, 171, 174, 0.4)'}
-            strokeWidth={1.5}
-            className="transition-all duration-500"
+            cx={centerX}
+            cy={centerY}
+            r={30}
+            fill="transparent"
+            stroke="rgba(106, 95, 68, 0.2)"
+            strokeWidth={1}
+            className="animate-pulse"
           />
-        ))}
-        
-        {/* Center circle - you */}
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={24}
-          fill="rgba(106, 95, 68, 0.9)"
-          stroke="rgba(74, 66, 48, 0.6)"
-          strokeWidth={2}
-        />
-        
-        {/* Add a subtle pulse animation to the center circle */}
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={24}
-          fill="transparent"
-          stroke="rgba(138, 126, 96, 0.4)"
-          strokeWidth={2}
-          className="animate-ripple origin-center"
-          style={{ animationDelay: '0.5s' }}
-        />
+          
+          {/* Main center circle */}
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={24}
+            fill="rgba(74, 66, 48, 0.95)"
+            stroke="rgba(49, 42, 30, 0.8)"
+            strokeWidth={2}
+          />
+          
+          {/* Center highlight */}
+          <circle
+            cx={centerX - 6}
+            cy={centerY - 6}
+            r={6}
+            fill="rgba(245, 245, 247, 0.3)"
+          />
+        </g>
       </svg>
       
-      {/* Text labels */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-xs text-stone-600 font-medium">
-        You
-      </div>
-      <div className="text-center mt-4 text-stone-700 text-sm font-medium">
-        {filledCount} of {totalCount - 1} spots filled
+      {/* Progress indicator */}
+      <div className="text-center mt-4">
+        <div className="text-earth-700 text-sm font-medium">
+          {filledCount} of {totalCount - 1} spots filled
+        </div>
+        <div className="w-32 bg-stone-200 rounded-full h-2 mx-auto mt-2">
+          <div 
+            className="bg-earth-600 h-2 rounded-full transition-all duration-500"
+            style={{ width: `${(filledCount / (totalCount - 1)) * 100}%` }}
+          ></div>
+        </div>
       </div>
     </div>
   );

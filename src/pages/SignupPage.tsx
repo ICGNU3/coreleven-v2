@@ -1,20 +1,21 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
 import { Footer } from '@/components/Footer';
 import { PrimaryButton } from '@/components/PrimaryButton';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CircleVisual } from '@/components/CircleVisual';
 import { Sprout } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     fullName: '',
-    email: '',
-    username: ''
+    email: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -22,26 +23,56 @@ const SignupPage = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    // TODO: Implement payment flow with Stripe
-    console.log('Form submitted:', formData);
     
-    // Simulate payment processing
-    setTimeout(() => {
+    if (!formData.fullName || !formData.email) {
+      toast({
+        title: "Please fill in all fields",
+        description: "Name and email are required to begin your Grove.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Create user in Airtable and get Stripe checkout session
+      const response = await fetch('/api/create-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      if (!response.ok) throw new Error('Failed to create user');
+      
+      const { checkoutUrl, userId } = await response.json();
+      
+      // Store user ID in localStorage for post-payment redirect
+      localStorage.setItem('pendingUserId', userId);
+      
+      // Redirect to Stripe checkout
+      window.location.href = checkoutUrl;
+      
+    } catch (error) {
+      console.error('Signup error:', error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again in a moment.",
+        variant: "destructive"
+      });
       setIsSubmitting(false);
-      // TODO: Redirect to dashboard after successful payment
-    }, 2000);
+    }
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="container max-w-5xl mx-auto px-4">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 to-earth-50">
+      <div className="container max-w-4xl mx-auto px-4">
         <NavBar />
         
-        <main className="flex-grow py-12">
-          <div className="max-w-lg mx-auto">
+        <main className="flex-grow py-12 flex items-center justify-center">
+          <div className="max-w-md w-full">
             <div className="text-center mb-10">
               <h1 className="text-2xl md:text-3xl font-medium mb-4 text-earth-700">
                 Begin Your Grove
@@ -56,10 +87,10 @@ const SignupPage = () => {
               </div>
             </div>
             
-            <div className="bg-white p-8 rounded-lg shadow-sm border border-stone-200">
+            <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-sm border border-stone-200/50">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name *</Label>
+                  <Label htmlFor="fullName" className="text-earth-700 font-medium">Full Name</Label>
                   <Input
                     id="fullName"
                     type="text"
@@ -67,12 +98,12 @@ const SignupPage = () => {
                     value={formData.fullName}
                     onChange={(e) => handleInputChange('fullName', e.target.value)}
                     placeholder="Your full name"
-                    className="w-full"
+                    className="border-stone-300 focus:border-earth-500 rounded-xl"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address *</Label>
+                  <Label htmlFor="email" className="text-earth-700 font-medium">Email Address</Label>
                   <Input
                     id="email"
                     type="email"
@@ -80,38 +111,23 @@ const SignupPage = () => {
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full"
+                    className="border-stone-300 focus:border-earth-500 rounded-xl"
                   />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="username">Username (optional)</Label>
-                  <Input
-                    id="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={(e) => handleInputChange('username', e.target.value)}
-                    placeholder="Choose a unique username"
-                    className="w-full"
-                  />
-                  <p className="text-xs text-stone-500">
-                    This will be part of your invitation link: coreleven.app/invite/username
-                  </p>
                 </div>
                 
                 <div className="border-t border-stone-200 pt-6">
                   <div className="flex justify-between items-center mb-6">
-                    <span className="text-stone-600">One-time access fee</span>
+                    <span className="text-stone-600">One-time access</span>
                     <span className="text-2xl font-medium text-earth-700">$11.11</span>
                   </div>
                   
                   <PrimaryButton 
                     type="submit"
-                    className="w-full text-lg py-6"
+                    className="w-full text-lg py-6 bg-earth-600 hover:bg-earth-700 rounded-xl"
                     disabled={isSubmitting || !formData.fullName || !formData.email}
                   >
                     {isSubmitting ? (
-                      "Processing..."
+                      "Creating your Grove..."
                     ) : (
                       <>
                         Complete Entry & Pay $11.11
@@ -121,21 +137,10 @@ const SignupPage = () => {
                   </PrimaryButton>
                   
                   <p className="text-xs text-stone-500 mt-3 text-center">
-                    Secure payment processing. Your Grove awaits.
+                    Secure payment. Your Grove awaits.
                   </p>
                 </div>
               </form>
-            </div>
-            
-            <div className="text-center mt-8">
-              <p className="text-stone-600 mb-4">
-                Already been invited to a Grove?
-              </p>
-              <Button variant="ghost" asChild>
-                <Link to="/invite" className="text-earth-600 hover:text-earth-800">
-                  Use invitation link instead
-                </Link>
-              </Button>
             </div>
           </div>
         </main>

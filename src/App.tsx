@@ -9,6 +9,7 @@ import InvitePage from "./pages/InvitePage";
 import DashboardPage from "./pages/DashboardPage";
 import StartPage from "./pages/StartPage";
 import SignupPage from "./pages/SignupPage";
+import GroveCompletePage from "./pages/GroveCompletePage";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import AboutPage from "./pages/AboutPage";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/invite/:inviteId?" element={<InvitePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/grove-complete" element={<GroveCompletePage />} />
           <Route path="/start" element={<StartPage />} />
           <Route path="/grove" element={<StartGrovePage />} />
           <Route path="/faq" element={<FAQ />} />
