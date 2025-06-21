@@ -9,12 +9,14 @@ import { Label } from '@/components/ui/label';
 import { CircleVisual } from '@/components/CircleVisual';
 import { useToast } from '@/hooks/use-toast';
 import { Users, Sprout } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface InviteData {
   inviterName: string;
   groveId: string;
   filledSpots: number;
   isValid: boolean;
+  inviteCode: string;
 }
 
 interface InviteDetailsProps {
@@ -26,7 +28,8 @@ export const InviteDetails = ({ inviteData }: InviteDetailsProps) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     fullName: '',
-    email: ''
+    email: '',
+    password: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,10 +40,10 @@ export const InviteDetails = ({ inviteData }: InviteDetailsProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.fullName || !formData.email) {
+    if (!formData.fullName || !formData.email || !formData.password) {
       toast({
         title: "Please fill in all fields",
-        description: "Name and email are required to join this Grove.",
+        description: "Name, email, and password are required to join this Grove.",
         variant: "destructive"
       });
       return;
@@ -49,22 +52,65 @@ export const InviteDetails = ({ inviteData }: InviteDetailsProps) => {
     setIsSubmitting(true);
     
     try {
-      // Simulate joining Grove
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast({
-        title: "Welcome to Coreleven!",
-        description: "You've successfully joined the Grove!",
+      // Sign up user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: formData.fullName,
+          }
+        }
       });
+
+      if (authError) {
+        throw authError;
+      }
+
+      if (authData.user) {
+        // Join the grove
+        const { error: memberError } = await supabase
+          .from('grove_members')
+          .insert({
+            grove_id: inviteData.groveId,
+            user_id: authData.user.id
+          });
+
+        if (memberError) {
+          throw memberError;
+        }
+
+        // Create their own grove as well
+        const { data: codeData } = await supabase.rpc('generate_invite_code');
+        
+        if (codeData) {
+          const { error: groveError } = await supabase
+            .from('groves')
+            .insert({
+              owner_id: authData.user.id,
+              invite_code: codeData
+            });
+
+          if (groveError) {
+            console.error('Error creating user grove:', groveError);
+          }
+        }
+
+        toast({
+          title: "Welcome to Coreleven!",
+          description: "You've successfully joined the Grove! Check your email to confirm your account.",
+        });
+        
+        // Redirect to dashboard
+        navigate('/dashboard');
+      }
       
-      // Redirect to dashboard
-      navigate('/dashboard');
-      
-    } catch (error) {
+    } catch (error: any) {
       console.error('Join error:', error);
       toast({
         title: "Something went wrong",
-        description: "Please try again in a moment.",
+        description: error.message || "Please try again in a moment.",
         variant: "destructive"
       });
     } finally {
@@ -102,7 +148,7 @@ export const InviteDetails = ({ inviteData }: InviteDetailsProps) => {
               
               <div className="bg-earth-50 p-4 rounded-xl mb-8">
                 <p className="text-sm text-earth-700">
-                  <strong>{10 - inviteData.filledSpots}</strong> spots remaining in this Grove
+                  <strong>{11 - inviteData.filledSpots}</strong> spots remaining in this Grove
                 </p>
               </div>
             </div>
@@ -134,12 +180,25 @@ export const InviteDetails = ({ inviteData }: InviteDetailsProps) => {
                     className="border-stone-300 focus:border-earth-500 rounded-xl"
                   />
                 </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-earth-700 font-medium">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    placeholder="Choose a secure password"
+                    className="border-stone-300 focus:border-earth-500 rounded-xl"
+                  />
+                </div>
                 
                 <div className="pt-4">
                   <PrimaryButton 
                     type="submit"
                     className="w-full text-lg py-6 bg-earth-600 hover:bg-earth-700 rounded-xl"
-                    disabled={isSubmitting || !formData.fullName || !formData.email}
+                    disabled={isSubmitting || !formData.fullName || !formData.email || !formData.password}
                   >
                     {isSubmitting ? (
                       "Joining Grove..."

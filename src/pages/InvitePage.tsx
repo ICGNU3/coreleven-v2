@@ -6,12 +6,14 @@ import { LoadingSpinner } from '@/components/invite/LoadingSpinner';
 import { InviteCodeForm } from '@/components/invite/InviteCodeForm';
 import { InviteDetails } from '@/components/invite/InviteDetails';
 import { InvalidInvite } from '@/components/invite/InvalidInvite';
+import { supabase } from '@/integrations/supabase/client';
 
 interface InviteData {
   inviterName: string;
   groveId: string;
   filledSpots: number;
   isValid: boolean;
+  inviteCode: string;
 }
 
 const InvitePage = () => {
@@ -24,28 +26,59 @@ const InvitePage = () => {
 
   useEffect(() => {
     if (inviteId) {
-      loadInviteData();
+      loadInviteData(inviteId);
     } else {
       setLoading(false);
       setShowInviteForm(true);
     }
   }, [inviteId]);
 
-  const loadInviteData = async () => {
+  const loadInviteData = async (inviteCode: string) => {
     try {
-      // Simulate API call - replace with real API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Look up grove by invite code
+      const { data: groveData, error: groveError } = await supabase
+        .from('groves')
+        .select(`
+          id,
+          owner_id,
+          invite_code,
+          is_complete,
+          profiles!groves_owner_id_fkey(full_name)
+        `)
+        .eq('invite_code', inviteCode.toUpperCase())
+        .single();
+
+      if (groveError || !groveData) {
+        console.error('Grove not found:', groveError);
+        setInviteData({ inviterName: '', groveId: '', filledSpots: 0, isValid: false, inviteCode: '' });
+        return;
+      }
+
+      // Check if grove is already complete
+      if (groveData.is_complete) {
+        setInviteData({ inviterName: '', groveId: '', filledSpots: 11, isValid: false, inviteCode: '' });
+        return;
+      }
+
+      // Count current members
+      const { count: memberCount } = await supabase
+        .from('grove_members')
+        .select('*', { count: 'exact' })
+        .eq('grove_id', groveData.id);
+
+      const totalMembers = (memberCount || 0) + 1; // +1 for owner
       
-      // Mock invite data - replace with real API response
       setInviteData({
-        inviterName: 'Sarah Johnson',
-        groveId: 'grove-123',
-        filledSpots: Math.floor(Math.random() * 8) + 1,
-        isValid: true
+        inviterName: groveData.profiles?.full_name || 'Grove Owner',
+        groveId: groveData.id,
+        filledSpots: totalMembers,
+        isValid: true,
+        inviteCode: groveData.invite_code
       });
+
     } catch (error) {
       console.error('Error loading invite:', error);
-      setInviteData({ inviterName: '', groveId: '', filledSpots: 0, isValid: false });
+      setInviteData({ inviterName: '', groveId: '', filledSpots: 0, isValid: false, inviteCode: '' });
     } finally {
       setLoading(false);
     }
@@ -55,22 +88,21 @@ const InvitePage = () => {
     setLoading(true);
     
     try {
-      // Simulate invite code validation
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await loadInviteData(inviteCode);
       
-      // Mock successful validation - replace with real API
-      setInviteData({
-        inviterName: 'Sarah Johnson',
-        groveId: 'grove-123',
-        filledSpots: Math.floor(Math.random() * 8) + 1,
-        isValid: true
-      });
-      
-      setShowInviteForm(false);
-      toast({
-        title: "Invite code accepted!",
-        description: "Welcome to the Grove invitation.",
-      });
+      if (inviteData?.isValid) {
+        setShowInviteForm(false);
+        toast({
+          title: "Invite code accepted!",
+          description: "Welcome to the Grove invitation.",
+        });
+      } else {
+        toast({
+          title: "Invalid invite code",
+          description: "Please check your invite code and try again.",
+          variant: "destructive"
+        });
+      }
       
     } catch (error) {
       console.error('Invalid invite code:', error);

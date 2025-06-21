@@ -1,21 +1,19 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
 import { Footer } from '@/components/Footer';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CircleVisual } from '@/components/CircleVisual';
-import { Sprout } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { LogIn } from 'lucide-react';
 
-const SignupPage = () => {
+const AuthPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    fullName: '',
     email: '',
     password: ''
   });
@@ -25,34 +23,13 @@ const SignupPage = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const createGrove = async (userId: string) => {
-    // Generate invite code and create grove
-    const { data: codeData } = await supabase.rpc('generate_invite_code');
-    
-    if (codeData) {
-      const { error: groveError } = await supabase
-        .from('groves')
-        .insert({
-          owner_id: userId,
-          invite_code: codeData
-        });
-
-      if (groveError) {
-        console.error('Error creating grove:', groveError);
-        throw groveError;
-      }
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log('Form submitted with data:', formData);
-    
-    if (!formData.fullName || !formData.email || !formData.password) {
+    if (!formData.email || !formData.password) {
       toast({
         title: "Please fill in all fields",
-        description: "Name, email, and password are required to begin your Grove journey.",
+        description: "Email and password are required to sign in.",
         variant: "destructive"
       });
       return;
@@ -61,40 +38,27 @@ const SignupPage = () => {
     setIsSubmitting(true);
     
     try {
-      // Sign up user
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            full_name: formData.fullName,
-          }
-        }
       });
 
-      if (authError) {
-        throw authError;
+      if (error) {
+        throw error;
       }
 
-      if (authData.user) {
-        // Create grove for the new user
-        await createGrove(authData.user.id);
-
-        toast({
-          title: "Welcome to Coreleven!",
-          description: "Your Grove has been created! Check your email to confirm your account.",
-        });
-        
-        // Redirect to dashboard
-        navigate('/dashboard');
-      }
+      toast({
+        title: "Welcome back!",
+        description: "You've successfully signed in.",
+      });
+      
+      navigate('/dashboard');
       
     } catch (error: any) {
-      console.error('Signup error:', error);
+      console.error('Login error:', error);
       toast({
-        title: "Something went wrong",
-        description: error.message || "Please try again in a moment.",
+        title: "Sign in failed",
+        description: error.message || "Please check your credentials and try again.",
         variant: "destructive"
       });
     } finally {
@@ -102,7 +66,7 @@ const SignupPage = () => {
     }
   };
 
-  const isFormValid = formData.fullName.trim() && formData.email.trim() && formData.password.trim();
+  const isFormValid = formData.email.trim() && formData.password.trim();
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 to-earth-50">
@@ -113,35 +77,16 @@ const SignupPage = () => {
           <div className="max-w-md w-full">
             <div className="text-center mb-10">
               <h1 className="text-2xl md:text-3xl font-medium mb-4 text-earth-700">
-                Begin Your Grove
+                Welcome Back
               </h1>
               
               <p className="text-stone-600 mb-8">
-                Join the rhythmic network. Your circle of 11 starts here.
+                Sign in to continue your Grove journey.
               </p>
-              
-              <div className="flex justify-center mb-8">
-                <CircleVisual filledCount={0} />
-              </div>
             </div>
             
             <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-sm border border-stone-200/50">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-earth-700 font-medium">Full Name</Label>
-                  <Input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    required
-                    value={formData.fullName}
-                    onChange={(e) => handleInputChange('fullName', e.target.value)}
-                    placeholder="Your full name"
-                    className="border-stone-300 focus:border-earth-500 rounded-xl"
-                    disabled={isSubmitting}
-                  />
-                </div>
-                
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-earth-700 font-medium">Email Address</Label>
                   <Input
@@ -166,7 +111,7 @@ const SignupPage = () => {
                     required
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    placeholder="Choose a secure password"
+                    placeholder="Your password"
                     className="border-stone-300 focus:border-earth-500 rounded-xl"
                     disabled={isSubmitting}
                   />
@@ -179,17 +124,20 @@ const SignupPage = () => {
                     disabled={isSubmitting || !isFormValid}
                   >
                     {isSubmitting ? (
-                      "Creating your Grove..."
+                      "Signing in..."
                     ) : (
                       <>
-                        Join Coreleven
-                        <Sprout className="ml-2 h-5 w-5" />
+                        Sign In
+                        <LogIn className="ml-2 h-5 w-5" />
                       </>
                     )}
                   </PrimaryButton>
                   
-                  <p className="text-xs text-stone-500 mt-3 text-center">
-                    Your Grove journey begins with a single step.
+                  <p className="text-sm text-stone-600 mt-4 text-center">
+                    Don't have an account?{' '}
+                    <Link to="/signup" className="text-earth-600 hover:text-earth-700 font-medium">
+                      Join Coreleven
+                    </Link>
                   </p>
                 </div>
               </form>
@@ -202,4 +150,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default AuthPage;

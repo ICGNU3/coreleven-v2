@@ -83,6 +83,103 @@ export type Database = {
           },
         ]
       }
+      grove_invitations: {
+        Row: {
+          accepted_at: string | null
+          grove_id: string
+          id: string
+          invited_at: string | null
+          invited_by: string
+          invitee_email: string | null
+          invitee_name: string | null
+          status: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          grove_id: string
+          id?: string
+          invited_at?: string | null
+          invited_by: string
+          invitee_email?: string | null
+          invitee_name?: string | null
+          status?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          grove_id?: string
+          id?: string
+          invited_at?: string | null
+          invited_by?: string
+          invitee_email?: string | null
+          invitee_name?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grove_invitations_grove_id_fkey"
+            columns: ["grove_id"]
+            isOneToOne: false
+            referencedRelation: "groves"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grove_members: {
+        Row: {
+          grove_id: string
+          id: string
+          joined_at: string | null
+          user_id: string
+        }
+        Insert: {
+          grove_id: string
+          id?: string
+          joined_at?: string | null
+          user_id: string
+        }
+        Update: {
+          grove_id?: string
+          id?: string
+          joined_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grove_members_grove_id_fkey"
+            columns: ["grove_id"]
+            isOneToOne: false
+            referencedRelation: "groves"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groves: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          invite_code: string
+          is_complete: boolean | null
+          owner_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          invite_code: string
+          is_complete?: boolean | null
+          owner_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          invite_code?: string
+          is_complete?: boolean | null
+          owner_id?: string
+        }
+        Relationships: []
+      }
       onboarding_steps: {
         Row: {
           id: string
@@ -117,6 +214,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       project_activity_log: {
         Row: {
@@ -781,6 +902,10 @@ export type Database = {
       }
     }
     Functions: {
+      generate_invite_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
