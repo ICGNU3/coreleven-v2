@@ -3,11 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
 import { Footer } from '@/components/Footer';
-import { CircleVisual } from '@/components/CircleVisual';
+import { GroveProgress } from '@/components/GroveProgress';
+import { WelcomeMessage } from '@/components/WelcomeMessage';
+import { MemberAvatar } from '@/components/MemberAvatar';
+import { StatusBadge } from '@/components/StatusBadge';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Copy, Share2, Users } from 'lucide-react';
+import { Copy, Share2, Users, MessageSquare, Bell } from 'lucide-react';
 
 interface User {
   id: string;
@@ -19,6 +22,7 @@ interface User {
     name: string;
     email: string;
     joinedAt: string;
+    status: 'confirmed' | 'pending';
   }>;
 }
 
@@ -109,126 +113,158 @@ const DashboardPage = () => {
 
   if (!user) return null;
 
-  const progress = (user.inviteCount / 10) * 100;
   const isComplete = user.inviteCount >= 10;
+  const groveStatus = isComplete ? 'completed' : user.inviteCount > 0 ? 'in-progress' : 'empty';
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 to-earth-50">
       <div className="container max-w-4xl mx-auto px-4">
         <NavBar />
         
-        <main className="flex-grow py-12">
-          <div className="max-w-2xl mx-auto">
+        <main className="flex-grow py-8">
+          <div className="max-w-2xl mx-auto space-y-8">
             {/* Welcome Section */}
-            <div className="text-center mb-12">
-              <h1 className="text-2xl md:text-3xl font-medium mb-4 text-earth-700">
-                Welcome to Your Grove, {user.name}
-              </h1>
+            <WelcomeMessage userName={user.name} />
+
+            {/* Grove Status Header */}
+            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-stone-200/50">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h1 className="text-xl font-medium text-earth-700">Your Grove</h1>
+                  <p className="text-stone-600 text-sm">
+                    {isComplete ? 'Complete and thriving' : `${10 - user.inviteCount} spots remaining`}
+                  </p>
+                </div>
+                <StatusBadge status={groveStatus} />
+              </div>
               
-              {isComplete ? (
-                <p className="text-lg text-earth-600 mb-8">
-                  🌱 Your Grove is complete! Rhythm unlocked.
-                </p>
-              ) : (
-                <p className="text-stone-600 mb-8">
-                  Share your unique link to grow your Grove. Invite {10 - user.inviteCount} more aligned souls.
-                </p>
+              <div className="flex justify-center">
+                <GroveProgress 
+                  filledCount={user.inviteCount} 
+                  size="md" 
+                  showPulse={!isComplete}
+                />
+              </div>
+            </div>
+
+            {/* Members Grid */}
+            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-stone-200/50">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-medium text-earth-700 flex items-center">
+                  <Users className="mr-2 h-5 w-5" />
+                  Grove Members
+                </h2>
+                <span className="text-sm text-stone-500">{user.inviteCount + 1} of 11</span>
+              </div>
+              
+              <div className="grid grid-cols-6 gap-3 mb-6">
+                {/* User (center) */}
+                <div className="col-span-6 flex justify-center mb-2">
+                  <div className="text-center">
+                    <MemberAvatar 
+                      name={user.name}  
+                      status="confirmed" 
+                      size="lg"
+                      showStatus={false}
+                    />
+                    <p className="text-xs text-stone-600 mt-1 font-medium">You</p>
+                  </div>
+                </div>
+                
+                {/* Referrals */}
+                {user.referrals.map((referral, index) => (
+                  <div key={index} className="text-center">
+                    <MemberAvatar 
+                      name={referral.name} 
+                      status={referral.status}
+                      size="md"
+                    />
+                    <p className="text-xs text-stone-600 mt-1 truncate">{referral.name}</p>
+                  </div>
+                ))}
+                
+                {/* Empty slots */}
+                {Array.from({ length: 10 - user.inviteCount }).map((_, index) => (
+                  <div key={`empty-${index}`} className="text-center">
+                    <MemberAvatar status="empty" size="md" showStatus={false} />
+                    <p className="text-xs text-stone-400 mt-1">Open</p>
+                  </div>
+                ))}
+              </div>
+
+              {!isComplete && (
+                <div className="border-t border-stone-200 pt-4">
+                  <div className="bg-stone-100 p-4 rounded-xl mb-4">
+                    <code className="text-sm text-stone-700 break-all">
+                      {window.location.origin}/invite/{user.groveId}
+                    </code>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button 
+                      onClick={handleCopyLink}
+                      disabled={copying}
+                      className="flex-1 bg-earth-600 hover:bg-earth-700 text-white rounded-xl"
+                    >
+                      <Copy className="mr-2 h-4 w-4" />
+                      {copying ? 'Copying...' : 'Copy Invite Link'}
+                    </Button>
+                    
+                    <Button 
+                      onClick={handleShare}
+                      variant="outline"
+                      className="flex-1 border-earth-300 text-earth-700 hover:bg-earth-50 rounded-xl"
+                    >
+                      <Share2 className="mr-2 h-4 w-4" />
+                      Share
+                    </Button>
+                  </div>
+                </div>
               )}
             </div>
 
-            {/* Grove Visual */}
-            <div className="flex justify-center mb-12">
-              <div className="relative">
-                <CircleVisual filledCount={user.inviteCount} />
-                {isComplete && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-earth-600 rounded-full flex items-center justify-center animate-pulse">
-                      <span className="text-white text-2xl">✨</span>
-                    </div>
-                  </div>
-                )}
-              </div>
+            {/* Grove Actions */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Button 
+                variant="outline" 
+                className="p-6 h-auto flex-col items-start border-earth-200 hover:border-earth-300 hover:bg-earth-50 rounded-xl"
+                disabled
+              >
+                <MessageSquare className="h-5 w-5 mb-2 text-earth-600" />
+                <div className="text-left">
+                  <div className="font-medium text-earth-700">Grove Chat</div>
+                  <div className="text-xs text-stone-500">Coming soon</div>
+                </div>
+              </Button>
+              
+              <Button 
+                variant="outline"
+                className="p-6 h-auto flex-col items-start border-earth-200 hover:border-earth-300 hover:bg-earth-50 rounded-xl"
+                disabled
+              >
+                <Bell className="h-5 w-5 mb-2 text-earth-600" />
+                <div className="text-left">
+                  <div className="font-medium text-earth-700">Reflections</div>
+                  <div className="text-xs text-stone-500">Coming soon</div>
+                </div>
+              </Button>
             </div>
 
-            {/* Invite Link Section */}
-            <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-sm border border-stone-200/50 mb-8">
-              <h2 className="text-xl font-medium mb-4 text-earth-700 flex items-center">
-                <Users className="mr-2 h-5 w-5" />
-                Your Referral Link
-              </h2>
-              
-              <div className="bg-stone-100 p-4 rounded-xl mb-4">
-                <code className="text-sm text-stone-700 break-all">
-                  {window.location.origin}/invite/{user.groveId}
-                </code>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button 
-                  onClick={handleCopyLink}
-                  disabled={copying}
-                  className="flex-1 bg-earth-600 hover:bg-earth-700 text-white rounded-xl"
-                >
-                  <Copy className="mr-2 h-4 w-4" />
-                  {copying ? 'Copying...' : 'Copy Link'}
-                </Button>
-                
-                <Button 
-                  onClick={handleShare}
-                  variant="outline"
-                  className="flex-1 border-earth-300 text-earth-700 hover:bg-earth-50 rounded-xl"
-                >
-                  <Share2 className="mr-2 h-4 w-4" />
-                  Share
-                </Button>
-              </div>
-            </div>
-
-            {/* Progress Section */}
-            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-stone-200/50 mb-8">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-stone-600">Grove Progress</span>
-                <span className="font-medium text-earth-700">{user.inviteCount} of 10</span>
-              </div>
-              
-              <div className="w-full bg-stone-200 rounded-full h-3 mb-4">
-                <div 
-                  className="bg-earth-600 h-3 rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${progress}%` }}
-                ></div>
-              </div>
-              
-              {isComplete ? (
+            {/* Complete Grove CTA */}
+            {isComplete && (
+              <div className="bg-gradient-to-br from-earth-100 to-earth-50 p-6 rounded-2xl border border-earth-200">
                 <div className="text-center">
+                  <h3 className="text-lg font-medium text-earth-800 mb-2">
+                    🌳 Grove Complete!
+                  </h3>
+                  <p className="text-stone-700 mb-4">
+                    Your Grove has reached full potential. Explore what's next.
+                  </p>
                   <PrimaryButton asChild className="bg-earth-600 hover:bg-earth-700 rounded-xl">
                     <Link to="/grove-complete">
-                      View Your Complete Grove
+                      Explore Your Complete Grove
                     </Link>
                   </PrimaryButton>
-                </div>
-              ) : (
-                <p className="text-sm text-stone-500 text-center">
-                  Each person who joins through your link fills another circle in your Grove.
-                </p>
-              )}
-            </div>
-
-            {/* Referrals List */}
-            {user.referrals.length > 0 && (
-              <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-stone-200/50">
-                <h3 className="text-lg font-medium mb-4 text-earth-700">Your Grove Members</h3>
-                <div className="space-y-3">
-                  {user.referrals.map((referral, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-stone-50 rounded-xl">
-                      <div>
-                        <div className="font-medium text-stone-800">{referral.name}</div>
-                        <div className="text-sm text-stone-500">{referral.email}</div>
-                      </div>
-                      <div className="text-xs text-stone-400">
-                        {new Date(referral.joinedAt).toLocaleDateString()}
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
             )}
