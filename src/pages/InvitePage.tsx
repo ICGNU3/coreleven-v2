@@ -35,42 +35,77 @@ const InvitePage = () => {
 
   const loadInviteData = async (inviteCode: string) => {
     try {
-      // Look up grove by invite code
+      console.log('Loading invite data for code:', inviteCode);
+      
+      // First, get the grove information
       const { data: groveData, error: groveError } = await supabase
         .from('groves')
         .select('id, owner_id, invite_code, is_complete')
         .eq('invite_code', inviteCode.toUpperCase())
         .single();
 
-      if (groveError || !groveData) {
-        console.error('Grove not found:', groveError);
-        setInviteData({ inviterName: '', groveId: '', filledSpots: 0, isValid: false, inviteCode: '' });
+      if (groveError) {
+        console.error('Grove lookup error:', groveError);
+        setInviteData({ 
+          inviterName: '', 
+          groveId: '', 
+          filledSpots: 0, 
+          isValid: false, 
+          inviteCode: '' 
+        });
+        return;
+      }
+
+      if (!groveData) {
+        console.log('No grove found for invite code');
+        setInviteData({ 
+          inviterName: '', 
+          groveId: '', 
+          filledSpots: 0, 
+          isValid: false, 
+          inviteCode: '' 
+        });
         return;
       }
 
       // Check if grove is already complete
       if (groveData.is_complete) {
-        setInviteData({ inviterName: '', groveId: '', filledSpots: 11, isValid: false, inviteCode: '' });
+        console.log('Grove is already complete');
+        setInviteData({ 
+          inviterName: '', 
+          groveId: '', 
+          filledSpots: 11, 
+          isValid: false, 
+          inviteCode: '' 
+        });
         return;
       }
 
-      // Get owner profile information
-      const { data: ownerProfile } = await supabase
+      // Get the owner's profile
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('full_name')
         .eq('id', groveData.owner_id)
         .single();
 
+      if (profileError) {
+        console.error('Profile lookup error:', profileError);
+      }
+
       // Count current members
-      const { count: memberCount } = await supabase
+      const { count: memberCount, error: countError } = await supabase
         .from('grove_members')
         .select('*', { count: 'exact' })
         .eq('grove_id', groveData.id);
 
+      if (countError) {
+        console.error('Member count error:', countError);
+      }
+
       const totalMembers = (memberCount || 0) + 1; // +1 for owner
       
       setInviteData({
-        inviterName: ownerProfile?.full_name || 'Grove Owner',
+        inviterName: profileData?.full_name || 'Grove Owner',
         groveId: groveData.id,
         filledSpots: totalMembers,
         isValid: true,
@@ -79,7 +114,13 @@ const InvitePage = () => {
 
     } catch (error) {
       console.error('Error loading invite:', error);
-      setInviteData({ inviterName: '', groveId: '', filledSpots: 0, isValid: false, inviteCode: '' });
+      setInviteData({ 
+        inviterName: '', 
+        groveId: '', 
+        filledSpots: 0, 
+        isValid: false, 
+        inviteCode: '' 
+      });
     } finally {
       setLoading(false);
     }
@@ -90,11 +131,25 @@ const InvitePage = () => {
     
     try {
       await loadInviteData(inviteCode);
-      setShowInviteForm(false);
-      toast({
-        title: "Invite code accepted!",
-        description: "Welcome to the Grove invitation.",
-      });
+      
+      // Wait for state to update, then check validity
+      setTimeout(() => {
+        const currentData = inviteData;
+        if (currentData?.isValid) {
+          setShowInviteForm(false);
+          toast({
+            title: "Invite code accepted!",
+            description: "Welcome to the Grove invitation.",
+          });
+        } else {
+          toast({
+            title: "Invalid invite code",
+            description: "Please check your invite code and try again.",
+            variant: "destructive"
+          });
+        }
+      }, 100);
+      
     } catch (error) {
       console.error('Invalid invite code:', error);
       toast({
@@ -102,7 +157,6 @@ const InvitePage = () => {
         description: "Please check your invite code and try again.",
         variant: "destructive"
       });
-      setShowInviteForm(true);
     } finally {
       setLoading(false);
     }
