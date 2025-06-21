@@ -90,21 +90,11 @@ const InvitePage = () => {
     
     try {
       await loadInviteData(inviteCode);
-      
-      if (inviteData?.isValid) {
-        setShowInviteForm(false);
-        toast({
-          title: "Invite code accepted!",
-          description: "Welcome to the Grove invitation.",
-        });
-      } else {
-        toast({
-          title: "Invalid invite code",
-          description: "Please check your invite code and try again.",
-          variant: "destructive"
-        });
-      }
-      
+      setShowInviteForm(false);
+      toast({
+        title: "Invite code accepted!",
+        description: "Welcome to the Grove invitation.",
+      });
     } catch (error) {
       console.error('Invalid invite code:', error);
       toast({
@@ -112,6 +102,7 @@ const InvitePage = () => {
         description: "Please check your invite code and try again.",
         variant: "destructive"
       });
+      setShowInviteForm(true);
     } finally {
       setLoading(false);
     }
