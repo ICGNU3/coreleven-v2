@@ -26,6 +26,8 @@ const SignupPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Form submitted with data:', formData);
+    
     if (!formData.fullName || !formData.email) {
       toast({
         title: "Please fill in all fields",
@@ -39,6 +41,7 @@ const SignupPage = () => {
     
     try {
       // Simulate signup process
+      console.log('Processing signup...');
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       toast({
@@ -60,6 +63,8 @@ const SignupPage = () => {
       setIsSubmitting(false);
     }
   };
+
+  const isFormValid = formData.fullName.trim() && formData.email.trim();
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 to-earth-50">
@@ -88,12 +93,14 @@ const SignupPage = () => {
                   <Label htmlFor="fullName" className="text-earth-700 font-medium">Full Name</Label>
                   <Input
                     id="fullName"
+                    name="fullName"
                     type="text"
                     required
                     value={formData.fullName}
                     onChange={(e) => handleInputChange('fullName', e.target.value)}
                     placeholder="Your full name"
                     className="border-stone-300 focus:border-earth-500 rounded-xl"
+                    disabled={isSubmitting}
                   />
                 </div>
                 
@@ -101,20 +108,22 @@ const SignupPage = () => {
                   <Label htmlFor="email" className="text-earth-700 font-medium">Email Address</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     required
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     placeholder="your@email.com"
                     className="border-stone-300 focus:border-earth-500 rounded-xl"
+                    disabled={isSubmitting}
                   />
                 </div>
                 
                 <div className="pt-4">
                   <PrimaryButton 
                     type="submit"
-                    className="w-full text-lg py-6 bg-earth-600 hover:bg-earth-700 rounded-xl"
-                    disabled={isSubmitting || !formData.fullName || !formData.email}
+                    className="w-full text-lg py-6 bg-earth-600 hover:bg-earth-700 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSubmitting || !isFormValid}
                   >
                     {isSubmitting ? (
                       "Creating your Grove..."
