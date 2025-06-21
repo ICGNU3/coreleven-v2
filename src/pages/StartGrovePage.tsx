@@ -24,7 +24,7 @@ const StartGrovePage = () => {
               </p>
               
               <p className="text-stone-600 text-lg mb-6">
-                Your task: invite 10 aligned people to complete your Grove—deliberately, not urgently. Every person matters.
+                Your task: invite 10 aligned people to complete your Grove - deliberately, not urgently. Every person matters.
               </p>
             </div>
             
@@ -33,7 +33,7 @@ const StartGrovePage = () => {
                 What Is a Grove?
               </h2>
               <p className="text-stone-600 mb-8">
-                A Grove is a living structure built on trust, clarity, and mutual growth. Each person brings their own pace and presence. Once complete, your Grove becomes part of a larger system—connected, awake, and purposeful.
+                A Grove is a living structure built on trust, clarity, and mutual growth. Each person brings their own pace and presence. Once complete, your Grove becomes part of a larger system - connected, awake, and purposeful.
               </p>
               
               <div className="flex justify-center mb-10">
@@ -86,9 +86,9 @@ const StartGrovePage = () => {
               
               <div className="bg-earth-50 p-6 rounded-lg mb-8 border border-earth-100">
                 <h4 className="font-medium mb-3 text-earth-700">How to Invite Them</h4>
-                <p className="text-stone-600 mb-3">Say it your way—or start with this:</p>
+                <p className="text-stone-600 mb-3">Say it your way - or start with this:</p>
                 <p className="text-stone-600 italic">
-                  "I'm building a Grove—a circle of 11 people committed to living with intention. You're someone I trust to hold space, grow alongside, and move with purpose. If this feels aligned, I'll send you the next step."
+                  "I'm building a Grove - a circle of 11 people committed to living with intention. You're someone I trust to hold space, grow alongside, and move with purpose. If this feels aligned, I'll send you the next step."
                 </p>
               </div>
             </div>
