@@ -49,15 +49,13 @@ export function NavBar({ className }: { className?: string }) {
                 >
                   Build a Grove
                 </Link>
-                <a 
-                  href="https://whop.com/coreleven/" 
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link 
+                  to="/invite" 
                   className="block px-4 py-2 text-sm text-stone-600 hover:bg-earth-50 hover:text-earth-700 transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
                   I've been invited
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -75,14 +73,12 @@ export function NavBar({ className }: { className?: string }) {
             >
               Build a Grove
             </Link>
-            <a 
-              href="https://whop.com/coreleven/" 
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link 
+              to="/invite" 
               className="text-sm font-medium px-4 py-2 bg-earth-700 text-white rounded-md hover:bg-earth-800 transition-colors"
             >
               I've been invited
-            </a>
+            </Link>
           </div>
         )}
       </div>
