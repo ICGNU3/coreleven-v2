@@ -29,7 +29,7 @@ const SignupPage = () => {
     if (!formData.fullName || !formData.email) {
       toast({
         title: "Please fill in all fields",
-        description: "Name and email are required to begin your Grove.",
+        description: "Name and email are required to begin your Grove journey.",
         variant: "destructive"
       });
       return;
@@ -38,22 +38,16 @@ const SignupPage = () => {
     setIsSubmitting(true);
     
     try {
-      // Create user in Airtable and get Stripe checkout session
-      const response = await fetch('/api/create-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+      // Simulate signup process
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Welcome to Coreleven!",
+        description: "Your Grove journey begins now. Check your email for next steps.",
       });
       
-      if (!response.ok) throw new Error('Failed to create user');
-      
-      const { checkoutUrl, userId } = await response.json();
-      
-      // Store user ID in localStorage for post-payment redirect
-      localStorage.setItem('pendingUserId', userId);
-      
-      // Redirect to Stripe checkout
-      window.location.href = checkoutUrl;
+      // Redirect to dashboard or welcome page
+      navigate('/dashboard');
       
     } catch (error) {
       console.error('Signup error:', error);
@@ -62,6 +56,7 @@ const SignupPage = () => {
         description: "Please try again in a moment.",
         variant: "destructive"
       });
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -115,12 +110,7 @@ const SignupPage = () => {
                   />
                 </div>
                 
-                <div className="border-t border-stone-200 pt-6">
-                  <div className="flex justify-between items-center mb-6">
-                    <span className="text-stone-600">One-time access</span>
-                    <span className="text-2xl font-medium text-earth-700">$11.11</span>
-                  </div>
-                  
+                <div className="pt-4">
                   <PrimaryButton 
                     type="submit"
                     className="w-full text-lg py-6 bg-earth-600 hover:bg-earth-700 rounded-xl"
@@ -130,14 +120,14 @@ const SignupPage = () => {
                       "Creating your Grove..."
                     ) : (
                       <>
-                        Complete Entry & Pay $11.11
+                        Join Coreleven
                         <Sprout className="ml-2 h-5 w-5" />
                       </>
                     )}
                   </PrimaryButton>
                   
                   <p className="text-xs text-stone-500 mt-3 text-center">
-                    Secure payment. Your Grove awaits.
+                    Your Grove journey begins with a single step.
                   </p>
                 </div>
               </form>
