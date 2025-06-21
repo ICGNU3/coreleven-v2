@@ -38,13 +38,7 @@ const InvitePage = () => {
       // Look up grove by invite code
       const { data: groveData, error: groveError } = await supabase
         .from('groves')
-        .select(`
-          id,
-          owner_id,
-          invite_code,
-          is_complete,
-          profiles!groves_owner_id_fkey(full_name)
-        `)
+        .select('id, owner_id, invite_code, is_complete')
         .eq('invite_code', inviteCode.toUpperCase())
         .single();
 
@@ -60,6 +54,13 @@ const InvitePage = () => {
         return;
       }
 
+      // Get owner profile information
+      const { data: ownerProfile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', groveData.owner_id)
+        .single();
+
       // Count current members
       const { count: memberCount } = await supabase
         .from('grove_members')
@@ -69,7 +70,7 @@ const InvitePage = () => {
       const totalMembers = (memberCount || 0) + 1; // +1 for owner
       
       setInviteData({
-        inviterName: groveData.profiles?.full_name || 'Grove Owner',
+        inviterName: ownerProfile?.full_name || 'Grove Owner',
         groveId: groveData.id,
         filledSpots: totalMembers,
         isValid: true,
