@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
@@ -185,7 +184,7 @@ const DashboardPage = () => {
                     Personal Groves
                   </h3>
                   <PrimaryButton
-                    onClick={() => navigate('/start-grove')}
+                    onClick={() => navigate('/grove')}
                     className="text-xs px-3 py-1 bg-earth-600 hover:bg-earth-700"
                   >
                     <Plus className="h-3 w-3 mr-1" />
