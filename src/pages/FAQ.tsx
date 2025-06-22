@@ -50,9 +50,8 @@ const FAQ = () => {
                   Is this a pyramid scheme?
                 </AccordionTrigger>
                 <AccordionContent className="text-stone-700">
-                  No. There's no top, no payouts — just aligned action, shared growth, and individual circles. The one-time contribution 
-                  of $11.11 goes toward building the system and tools, not to other members. There is no hierarchical structure where earlier 
-                  participants benefit from later ones.
+                  No. There's no top, no payouts — just aligned action, shared growth, and individual circles. 
+                  There is no hierarchical structure where earlier participants benefit from later ones.
                 </AccordionContent>
               </AccordionItem>
               
@@ -74,19 +73,6 @@ const FAQ = () => {
                 <AccordionContent className="text-stone-700">
                   "I'm building a Grove — 11 people, one rhythm. I want you in mine." You can also share that this is a 
                   structure for intentional growth with trusted connections, not another social network or content platform.
-                </AccordionContent>
-              </AccordionItem>
-              
-              {/* Additional Questions */}
-              <AccordionItem value="payment">
-                <AccordionTrigger className="text-lg font-medium text-earth-700">
-                  Why is there a payment of $11.11?
-                </AccordionTrigger>
-                <AccordionContent className="text-stone-700">
-                  The one-time payment of $11.11 serves as a symbolic threshold of commitment and helps fund the development of 
-                  tools and systems that support the Coreleven structure. It's not recurring, and it's not distributed to 
-                  members — it goes directly into building and maintaining the system itself. The payment is a means of lighting 
-                  a node, a symbolic message of consent and belief. The value of the network itself is what we seek to harness.
                 </AccordionContent>
               </AccordionItem>
               
