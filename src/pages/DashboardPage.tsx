@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
@@ -211,8 +212,8 @@ const DashboardPage = () => {
                         />
                       </div>
                       <GroveProgress 
-                        current={grove.memberCount} 
-                        target={11} 
+                        filledCount={grove.memberCount - 1} 
+                        totalCount={11} 
                         size="sm" 
                       />
                       <p className="text-xs text-stone-600 mt-1">
@@ -250,8 +251,8 @@ const DashboardPage = () => {
                           />
                         </div>
                         <GroveProgress 
-                          current={grove.memberCount} 
-                          target={11} 
+                          filledCount={grove.memberCount - 1} 
+                          totalCount={11} 
                           size="sm" 
                         />
                       </div>
@@ -295,8 +296,8 @@ const DashboardPage = () => {
                     </div>
                     
                     <GroveProgress 
-                      current={selectedGrove.memberCount} 
-                      target={11} 
+                      filledCount={selectedGrove.memberCount - 1} 
+                      totalCount={11} 
                     />
                   </div>
 
@@ -330,20 +331,26 @@ const DashboardPage = () => {
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Owner */}
                             <MemberCard
-                              fullName={profile.full_name}
-                              email={profile.email}
-                              joinedAt={selectedGrove.created_at}
-                              isOwner={true}
+                              member={{
+                                id: 'owner',
+                                name: profile.full_name,
+                                email: profile.email,
+                                status: 'paid'
+                              }}
+                              index={0}
                             />
                             
                             {/* Members */}
-                            {selectedGrove.members?.map((member: any) => (
+                            {selectedGrove.members?.map((member: any, index: number) => (
                               <MemberCard
                                 key={member.id}
-                                fullName={member.profiles?.full_name || 'Anonymous'}
-                                email={member.profiles?.email || ''}
-                                joinedAt={member.joined_at}
-                                isOwner={false}
+                                member={{
+                                  id: member.id,
+                                  name: member.profiles?.full_name || 'Anonymous',
+                                  email: member.profiles?.email || null,
+                                  status: 'paid'
+                                }}
+                                index={index + 1}
                               />
                             ))}
                           </div>
