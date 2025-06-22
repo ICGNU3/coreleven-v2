@@ -9,10 +9,13 @@ import { Label } from '@/components/ui/label';
 import { Sprout } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { PersonalityQuestionnaire } from '@/components/onboarding/PersonalityQuestionnaire';
 
 const SignupPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [step, setStep] = useState<'signup' | 'questionnaire'>('signup');
+  const [userId, setUserId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -32,7 +35,8 @@ const SignupPage = () => {
         .from('groves')
         .insert({
           owner_id: userId,
-          invite_code: codeData
+          invite_code: codeData,
+          grove_type: 'personal'
         });
 
       if (groveError) {
@@ -83,13 +87,13 @@ const SignupPage = () => {
 
       if (authData.user) {
         await createGrove(authData.user.id);
+        setUserId(authData.user.id);
+        setStep('questionnaire');
 
         toast({
-          title: "Welcome to Coreleven!",
-          description: "Your Grove has been created! Check your email to confirm your account.",
+          title: "Account created!",
+          description: "Let's complete your profile to find your perfect Grove matches.",
         });
-        
-        navigate('/dashboard');
       }
       
     } catch (error: any) {
@@ -103,6 +107,72 @@ const SignupPage = () => {
       setIsSubmitting(false);
     }
   };
+
+  const handleQuestionnaireComplete = async (questionnaireData: any) => {
+    if (!userId) return;
+
+    try {
+      const { error } = await supabase
+        .from('user_questionnaires')
+        .insert({
+          user_id: userId,
+          big_five_scores: questionnaireData.bigFiveScores,
+          enneagram_type: questionnaireData.enneagramType,
+          interest_tags: questionnaireData.interestTags,
+          region: questionnaireData.region,
+          pronouns: questionnaireData.pronouns
+        });
+
+      if (error) {
+        console.error('Error saving questionnaire:', error);
+        toast({
+          title: "Profile saved with limited data",
+          description: "We'll still create great matches for you!",
+          variant: "default"
+        });
+      } else {
+        toast({
+          title: "Profile complete!",
+          description: "Welcome to Coreleven. Your Grove awaits!",
+        });
+      }
+
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Questionnaire save error:', error);
+      toast({
+        title: "Welcome to Coreleven!",
+        description: "Let's get started with your Grove.",
+      });
+      navigate('/dashboard');
+    }
+  };
+
+  const handleQuestionnaireSkip = () => {
+    toast({
+      title: "Welcome to Coreleven!",
+      description: "You can complete your profile anytime from the dashboard.",
+    });
+    navigate('/dashboard');
+  };
+
+  if (step === 'questionnaire') {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 to-earth-50">
+        <div className="container max-w-4xl mx-auto px-4">
+          <NavBar />
+          
+          <main className="flex-grow py-12">
+            <PersonalityQuestionnaire
+              onComplete={handleQuestionnaireComplete}
+              onSkip={handleQuestionnaireSkip}
+            />
+          </main>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 to-earth-50">

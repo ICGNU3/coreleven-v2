@@ -1,273 +1,376 @@
-
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
 import { Footer } from '@/components/Footer';
-import { GroveProgress } from '@/components/GroveProgress';
 import { WelcomeMessage } from '@/components/WelcomeMessage';
-import { MemberAvatar } from '@/components/MemberAvatar';
+import { GroveProgress } from '@/components/GroveProgress';
+import { MemberCard } from '@/components/MemberCard';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PrimaryButton } from '@/components/PrimaryButton';
-import { Button } from '@/components/ui/button';
+import { AudioRoom } from '@/components/audio/AudioRoom';
+import { GroveChat } from '@/components/grove/GroveChat';
 import { useToast } from '@/hooks/use-toast';
-import { Copy, Share2, Users, MessageSquare, Bell } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { User, Session } from '@supabase/supabase-js';
+import { Plus, Users, Sparkles, Settings, Volume2 } from 'lucide-react';
 
-interface User {
+interface Grove {
   id: string;
-  name: string;
+  invite_code: string;
+  created_at: string;
+  is_complete: boolean;
+  grove_type: 'personal' | 'auto';
+  is_private: boolean;
+  members?: any[];
+  memberCount: number;
+}
+
+interface Profile {
+  id: string;
+  full_name: string;
   email: string;
-  groveId: string;
-  inviteCount: number;
-  referrals: Array<{
-    name: string;
-    email: string;
-    joinedAt: string;
-    status: 'confirmed' | 'pending';
-  }>;
+  created_at: string;
 }
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [groves, setGroves] = useState<Grove[]>([]);
+  const [selectedGrove, setSelectedGrove] = useState<Grove | null>(null);
   const [loading, setLoading] = useState(true);
-  const [copying, setCopying] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'audio' | 'chat'>('overview');
 
   useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const userId = localStorage.getItem('currentUserId');
-        if (!userId) {
-          navigate('/signup');
-          return;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (!session) {
+          navigate('/auth');
         }
-
-        const response = await fetch(`/api/user/${userId}`);
-        if (!response.ok) throw new Error('Failed to load user data');
-        
-        const userData = await response.json();
-        setUser(userData);
-      } catch (error) {
-        console.error('Error loading user data:', error);
-        navigate('/signup');
-      } finally {
-        setLoading(false);
       }
-    };
+    );
 
-    loadUserData();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (!session) {
+        navigate('/auth');
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleCopyLink = async () => {
+  useEffect(() => {
+    if (user) {
+      loadUserData();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (groves.length > 0 && !selectedGrove) {
+      setSelectedGrove(groves[0]);
+    }
+  }, [groves, selectedGrove]);
+
+  const loadUserData = async () => {
     if (!user) return;
-    
-    setCopying(true);
-    const inviteLink = `${window.location.origin}/invite/${user.groveId}`;
-    
+
     try {
-      await navigator.clipboard.writeText(inviteLink);
-      toast({
-        title: "Invite link copied!",
-        description: "Share this link to grow your Grove.",
-      });
+      // Load profile
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Error loading profile:', profileError);
+      } else {
+        setProfile(profileData);
+      }
+
+      // Load groves with member counts
+      const { data: grovesData, error: grovesError } = await supabase
+        .from('groves')
+        .select(`
+          *,
+          grove_members (
+            id,
+            user_id,
+            joined_at,
+            profiles:user_id (
+              full_name,
+              email
+            )
+          )
+        `)
+        .or(`owner_id.eq.${user.id},grove_members.user_id.eq.${user.id}`);
+
+      if (grovesError) {
+        console.error('Error loading groves:', grovesError);
+      } else {
+        const processedGroves = grovesData?.map(grove => ({
+          ...grove,
+          memberCount: (grove.grove_members?.length || 0) + 1, // +1 for owner
+          members: grove.grove_members
+        })) || [];
+        
+        setGroves(processedGroves);
+      }
     } catch (error) {
-      console.error('Failed to copy:', error);
-      toast({
-        title: "Copy failed",
-        description: "Please copy the link manually.",
-        variant: "destructive"
-      });
+      console.error('Error loading user data:', error);
     } finally {
-      setCopying(false);
+      setLoading(false);
     }
   };
 
-  const handleShare = async () => {
-    if (!user) return;
-    
-    const inviteLink = `${window.location.origin}/invite/${user.groveId}`;
-    const shareText = `Join my Grove on Coreleven - a rhythm-based network for human growth. ${inviteLink}`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Join my Grove',
-          text: shareText,
-          url: inviteLink
-        });
-      } catch (error) {
-        console.error('Share failed:', error);
-      }
-    } else {
-      handleCopyLink();
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-50 to-earth-50">
-        <div className="animate-pulse text-earth-600">Loading your Grove...</div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-earth-600 mx-auto mb-4"></div>
+          <p className="text-stone-600">Loading your Groves...</p>
+        </div>
       </div>
     );
   }
 
-  if (!user) return null;
+  if (!user || !profile) {
+    return null;
+  }
 
-  const isComplete = user.inviteCount >= 10;
-  const groveStatus = isComplete ? 'completed' : user.inviteCount > 0 ? 'in-progress' : 'empty';
+  const personalGroves = groves.filter(g => g.grove_type === 'personal');
+  const autoGroves = groves.filter(g => g.grove_type === 'auto');
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 to-earth-50">
-      <div className="container max-w-4xl mx-auto px-4">
+      <div className="container max-w-6xl mx-auto px-4">
         <NavBar />
         
         <main className="flex-grow py-8">
-          <div className="max-w-2xl mx-auto space-y-8">
-            {/* Welcome Section */}
-            <WelcomeMessage userName={user.name} />
-
-            {/* Grove Status Header */}
-            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-stone-200/50">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h1 className="text-xl font-medium text-earth-700">Your Grove</h1>
-                  <p className="text-stone-600 text-sm">
-                    {isComplete ? 'Complete and thriving' : `${10 - user.inviteCount} spots remaining`}
-                  </p>
-                </div>
-                <StatusBadge status={groveStatus} />
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Sidebar - Grove List */}
+            <div className="space-y-6">
+              <WelcomeMessage userName={profile.full_name} />
               
-              <div className="flex justify-center">
-                <GroveProgress 
-                  filledCount={user.inviteCount} 
-                  size="md" 
-                  showPulse={!isComplete}
-                />
-              </div>
-            </div>
-
-            {/* Members Grid */}
-            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-stone-200/50">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium text-earth-700 flex items-center">
-                  <Users className="mr-2 h-5 w-5" />
-                  Grove Members
-                </h2>
-                <span className="text-sm text-stone-500">{user.inviteCount + 1} of 11</span>
-              </div>
-              
-              <div className="grid grid-cols-6 gap-3 mb-6">
-                {/* User (center) */}
-                <div className="col-span-6 flex justify-center mb-2">
-                  <div className="text-center">
-                    <MemberAvatar 
-                      name={user.name}  
-                      status="confirmed" 
-                      size="lg"
-                      showStatus={false}
-                    />
-                    <p className="text-xs text-stone-600 mt-1 font-medium">You</p>
-                  </div>
+              {/* Personal Groves */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-stone-200/50 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-medium text-earth-700 flex items-center">
+                    <Users className="mr-2 h-5 w-5" />
+                    Personal Groves
+                  </h3>
+                  <PrimaryButton
+                    onClick={() => navigate('/start-grove')}
+                    className="text-xs px-3 py-1 bg-earth-600 hover:bg-earth-700"
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    New
+                  </PrimaryButton>
                 </div>
                 
-                {/* Referrals */}
-                {user.referrals.map((referral, index) => (
-                  <div key={index} className="text-center">
-                    <MemberAvatar 
-                      name={referral.name} 
-                      status={referral.status}
-                      size="md"
-                    />
-                    <p className="text-xs text-stone-600 mt-1 truncate">{referral.name}</p>
-                  </div>
-                ))}
-                
-                {/* Empty slots */}
-                {Array.from({ length: 10 - user.inviteCount }).map((_, index) => (
-                  <div key={`empty-${index}`} className="text-center">
-                    <MemberAvatar status="empty" size="md" showStatus={false} />
-                    <p className="text-xs text-stone-400 mt-1">Open</p>
-                  </div>
-                ))}
+                <div className="space-y-3">
+                  {personalGroves.map(grove => (
+                    <div
+                      key={grove.id}
+                      onClick={() => setSelectedGrove(grove)}
+                      className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                        selectedGrove?.id === grove.id
+                          ? 'border-earth-500 bg-earth-50'
+                          : 'border-stone-200 hover:border-earth-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium text-sm">My Grove</span>
+                        <StatusBadge 
+                          status={grove.is_complete ? 'complete' : 'active'} 
+                          size="sm" 
+                        />
+                      </div>
+                      <GroveProgress 
+                        currentMembers={grove.memberCount} 
+                        targetMembers={11} 
+                        size="sm" 
+                      />
+                      <p className="text-xs text-stone-600 mt-1">
+                        Code: {grove.invite_code}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {!isComplete && (
-                <div className="border-t border-stone-200 pt-4">
-                  <div className="bg-stone-100 p-4 rounded-xl mb-4">
-                    <code className="text-sm text-stone-700 break-all">
-                      {window.location.origin}/invite/{user.groveId}
-                    </code>
-                  </div>
+              {/* Auto Groves */}
+              {autoGroves.length > 0 && (
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-stone-200/50 p-6">
+                  <h3 className="font-medium text-earth-700 mb-4 flex items-center">
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Auto Groves
+                  </h3>
                   
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Button 
-                      onClick={handleCopyLink}
-                      disabled={copying}
-                      className="flex-1 bg-earth-600 hover:bg-earth-700 text-white rounded-xl"
-                    >
-                      <Copy className="mr-2 h-4 w-4" />
-                      {copying ? 'Copying...' : 'Copy Invite Link'}
-                    </Button>
-                    
-                    <Button 
-                      onClick={handleShare}
-                      variant="outline"
-                      className="flex-1 border-earth-300 text-earth-700 hover:bg-earth-50 rounded-xl"
-                    >
-                      <Share2 className="mr-2 h-4 w-4" />
-                      Share
-                    </Button>
+                  <div className="space-y-3">
+                    {autoGroves.map(grove => (
+                      <div
+                        key={grove.id}
+                        onClick={() => setSelectedGrove(grove)}
+                        className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                          selectedGrove?.id === grove.id
+                            ? 'border-earth-500 bg-earth-50'
+                            : 'border-stone-200 hover:border-earth-300'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium text-sm">Auto Grove #{grove.id.slice(-4)}</span>
+                          <StatusBadge 
+                            status={grove.is_complete ? 'complete' : 'active'} 
+                            size="sm" 
+                          />
+                        </div>
+                        <GroveProgress 
+                          currentMembers={grove.memberCount} 
+                          targetMembers={11} 
+                          size="sm" 
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
-            </div>
 
-            {/* Grove Actions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Button 
-                variant="outline" 
-                className="p-6 h-auto flex-col items-start border-earth-200 hover:border-earth-300 hover:bg-earth-50 rounded-xl"
-                disabled
-              >
-                <MessageSquare className="h-5 w-5 mb-2 text-earth-600" />
-                <div className="text-left">
-                  <div className="font-medium text-earth-700">Grove Chat</div>
-                  <div className="text-xs text-stone-500">Coming soon</div>
-                </div>
-              </Button>
-              
-              <Button 
-                variant="outline"
-                className="p-6 h-auto flex-col items-start border-earth-200 hover:border-earth-300 hover:bg-earth-50 rounded-xl"
-                disabled
-              >
-                <Bell className="h-5 w-5 mb-2 text-earth-600" />
-                <div className="text-left">
-                  <div className="font-medium text-earth-700">Reflections</div>
-                  <div className="text-xs text-stone-500">Coming soon</div>
-                </div>
-              </Button>
-            </div>
-
-            {/* Complete Grove CTA */}
-            {isComplete && (
-              <div className="bg-gradient-to-br from-earth-100 to-earth-50 p-6 rounded-2xl border border-earth-200">
-                <div className="text-center">
-                  <h3 className="text-lg font-medium text-earth-800 mb-2">
-                    🌳 Grove Complete!
-                  </h3>
-                  <p className="text-stone-700 mb-4">
-                    Your Grove has reached full potential. Explore what's next.
-                  </p>
-                  <PrimaryButton asChild className="bg-earth-600 hover:bg-earth-700 rounded-xl">
-                    <Link to="/grove-complete">
-                      Explore Your Complete Grove
-                    </Link>
-                  </PrimaryButton>
-                </div>
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-stone-200/50 p-6">
+                <PrimaryButton
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  Sign Out
+                </PrimaryButton>
               </div>
-            )}
+            </div>
+
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-6">
+              {selectedGrove && (
+                <>
+                  {/* Grove Header */}
+                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-stone-200/50 p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h2 className="text-xl font-medium text-earth-700 mb-1">
+                          {selectedGrove.grove_type === 'personal' ? 'My Grove' : `Auto Grove #${selectedGrove.id.slice(-4)}`}
+                        </h2>
+                        <p className="text-stone-600 text-sm">
+                          {selectedGrove.is_complete 
+                            ? 'Complete Grove of 11 members' 
+                            : `${selectedGrove.memberCount} of 11 members`}
+                        </p>
+                      </div>
+                      <StatusBadge 
+                        status={selectedGrove.is_complete ? 'complete' : 'active'}
+                      />
+                    </div>
+                    
+                    <GroveProgress 
+                      currentMembers={selectedGrove.memberCount} 
+                      targetMembers={11} 
+                    />
+                  </div>
+
+                  {/* Tab Navigation */}
+                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-stone-200/50">
+                    <div className="flex border-b border-stone-200">
+                      {[
+                        { id: 'overview', label: 'Overview', icon: Users },
+                        { id: 'audio', label: 'Audio Room', icon: Volume2 },
+                        { id: 'chat', label: 'Chat', icon: Users }
+                      ].map(({ id, label, icon: Icon }) => (
+                        <button
+                          key={id}
+                          onClick={() => setActiveTab(id as any)}
+                          className={`flex-1 flex items-center justify-center px-4 py-3 text-sm font-medium transition-colors ${
+                            activeTab === id
+                              ? 'text-earth-700 border-b-2 border-earth-600 bg-earth-50'
+                              : 'text-stone-600 hover:text-earth-600'
+                          }`}
+                        >
+                          <Icon className="mr-2 h-4 w-4" />
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="p-6">
+                      {activeTab === 'overview' && (
+                        <div className="space-y-4">
+                          <h3 className="font-medium text-earth-700">Grove Members</h3>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* Owner */}
+                            <MemberCard
+                              name={profile.full_name}
+                              email={profile.email}
+                              joinDate={selectedGrove.created_at}
+                              isOwner={true}
+                            />
+                            
+                            {/* Members */}
+                            {selectedGrove.members?.map((member: any) => (
+                              <MemberCard
+                                key={member.id}
+                                name={member.profiles?.full_name || 'Anonymous'}
+                                email={member.profiles?.email || ''}
+                                joinDate={member.joined_at}
+                                isOwner={false}
+                              />
+                            ))}
+                          </div>
+                          
+                          {!selectedGrove.is_complete && (
+                            <div className="mt-6 p-4 bg-earth-50 rounded-lg border border-earth-200">
+                              <p className="text-sm text-earth-700 mb-2">
+                                <strong>Invite Code:</strong> {selectedGrove.invite_code}
+                              </p>
+                              <p className="text-xs text-earth-600">
+                                Share this code with friends to invite them to your Grove. 
+                                Your Grove will be complete when you reach 11 members.
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {activeTab === 'audio' && (
+                        <AudioRoom
+                          groveId={selectedGrove.id}
+                          groveName={selectedGrove.grove_type === 'personal' ? 'My Grove' : `Auto Grove #${selectedGrove.id.slice(-4)}`}
+                        />
+                      )}
+
+                      {activeTab === 'chat' && (
+                        <GroveChat
+                          groveId={selectedGrove.id}
+                          groveName={selectedGrove.grove_type === 'personal' ? 'My Grove' : `Auto Grove #${selectedGrove.id.slice(-4)}`}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </main>
       </div>
