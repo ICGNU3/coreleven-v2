@@ -20,7 +20,7 @@ interface ChatMessage {
   sender_id: string;
   profiles?: {
     full_name: string;
-  };
+  } | null;
 }
 
 export const GroveChat: React.FC<GroveChatProps> = ({ groveId, groveName }) => {
@@ -46,25 +46,40 @@ export const GroveChat: React.FC<GroveChatProps> = ({ groveId, groveName }) => {
 
   const loadMessages = async () => {
     try {
-      const { data, error } = await supabase
+      // First get the messages
+      const { data: messagesData, error } = await supabase
         .from('grove_messages')
-        .select(`
-          *,
-          profiles:sender_id (
-            full_name
-          )
-        `)
+        .select('*')
         .eq('grove_id', groveId)
         .order('created_at', { ascending: true })
         .limit(50);
 
       if (error) {
         console.error('Error loading messages:', error);
+        setMessages([]);
+        return;
+      }
+
+      // Then get profiles for each sender
+      if (messagesData && messagesData.length > 0) {
+        const senderIds = [...new Set(messagesData.map(msg => msg.sender_id))];
+        const { data: profilesData } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .in('id', senderIds);
+
+        const enrichedMessages = messagesData.map(msg => ({
+          ...msg,
+          profiles: profilesData?.find(p => p.id === msg.sender_id) || null
+        }));
+
+        setMessages(enrichedMessages);
       } else {
-        setMessages(data || []);
+        setMessages([]);
       }
     } catch (error) {
       console.error('Error in loadMessages:', error);
+      setMessages([]);
     } finally {
       setLoading(false);
     }
@@ -93,7 +108,7 @@ export const GroveChat: React.FC<GroveChatProps> = ({ groveId, groveName }) => {
 
           setMessages(prev => [...prev, {
             ...newMessage,
-            profiles: profileData ? { full_name: profileData.full_name } : undefined
+            profiles: profileData ? { full_name: profileData.full_name } : null
           }]);
         }
       )

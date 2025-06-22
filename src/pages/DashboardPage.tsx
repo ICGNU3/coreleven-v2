@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '@/components/NavBar';
@@ -97,30 +98,39 @@ const DashboardPage = () => {
       // Load groves with member counts
       const { data: grovesData, error: grovesError } = await supabase
         .from('groves')
-        .select(`
-          *,
-          grove_members (
-            id,
-            user_id,
-            joined_at,
-            profiles:user_id (
-              full_name,
-              email
-            )
-          )
-        `)
-        .or(`owner_id.eq.${user.id},grove_members.user_id.eq.${user.id}`);
+        .select('*')
+        .or(`owner_id.eq.${user.id}`);
 
       if (grovesError) {
         console.error('Error loading groves:', grovesError);
+        setGroves([]);
       } else {
-        const processedGroves = grovesData?.map(grove => ({
-          ...grove,
-          memberCount: (grove.grove_members?.length || 0) + 1, // +1 for owner
-          members: grove.grove_members
-        })) || [];
+        // Get member counts for each grove
+        const grovesWithCounts = await Promise.all(
+          (grovesData || []).map(async (grove) => {
+            const { data: membersData } = await supabase
+              .from('grove_members')
+              .select(`
+                id,
+                user_id,
+                joined_at,
+                profiles:user_id (
+                  full_name,
+                  email
+                )
+              `)
+              .eq('grove_id', grove.id);
+
+            return {
+              ...grove,
+              grove_type: grove.grove_type as 'personal' | 'auto',
+              memberCount: (membersData?.length || 0) + 1, // +1 for owner
+              members: membersData || []
+            };
+          })
+        );
         
-        setGroves(processedGroves);
+        setGroves(grovesWithCounts);
       }
     } catch (error) {
       console.error('Error loading user data:', error);
@@ -197,13 +207,13 @@ const DashboardPage = () => {
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-sm">My Grove</span>
                         <StatusBadge 
-                          status={grove.is_complete ? 'complete' : 'active'} 
+                          status={grove.is_complete ? 'completed' : 'in-progress'} 
                           size="sm" 
                         />
                       </div>
                       <GroveProgress 
-                        currentMembers={grove.memberCount} 
-                        targetMembers={11} 
+                        current={grove.memberCount} 
+                        target={11} 
                         size="sm" 
                       />
                       <p className="text-xs text-stone-600 mt-1">
@@ -236,13 +246,13 @@ const DashboardPage = () => {
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium text-sm">Auto Grove #{grove.id.slice(-4)}</span>
                           <StatusBadge 
-                            status={grove.is_complete ? 'complete' : 'active'} 
+                            status={grove.is_complete ? 'completed' : 'in-progress'} 
                             size="sm" 
                           />
                         </div>
                         <GroveProgress 
-                          currentMembers={grove.memberCount} 
-                          targetMembers={11} 
+                          current={grove.memberCount} 
+                          target={11} 
                           size="sm" 
                         />
                       </div>
@@ -281,13 +291,13 @@ const DashboardPage = () => {
                         </p>
                       </div>
                       <StatusBadge 
-                        status={selectedGrove.is_complete ? 'complete' : 'active'}
+                        status={selectedGrove.is_complete ? 'completed' : 'in-progress'}
                       />
                     </div>
                     
                     <GroveProgress 
-                      currentMembers={selectedGrove.memberCount} 
-                      targetMembers={11} 
+                      current={selectedGrove.memberCount} 
+                      target={11} 
                     />
                   </div>
 
@@ -321,9 +331,9 @@ const DashboardPage = () => {
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Owner */}
                             <MemberCard
-                              name={profile.full_name}
+                              fullName={profile.full_name}
                               email={profile.email}
-                              joinDate={selectedGrove.created_at}
+                              joinedAt={selectedGrove.created_at}
                               isOwner={true}
                             />
                             
@@ -331,9 +341,9 @@ const DashboardPage = () => {
                             {selectedGrove.members?.map((member: any) => (
                               <MemberCard
                                 key={member.id}
-                                name={member.profiles?.full_name || 'Anonymous'}
+                                fullName={member.profiles?.full_name || 'Anonymous'}
                                 email={member.profiles?.email || ''}
-                                joinDate={member.joined_at}
+                                joinedAt={member.joined_at}
                                 isOwner={false}
                               />
                             ))}

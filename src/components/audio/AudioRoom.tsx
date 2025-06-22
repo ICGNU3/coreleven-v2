@@ -31,7 +31,7 @@ interface SpeakerQueue {
   raised_hand_at: string;
   profiles?: {
     full_name: string;
-  };
+  } | null;
 }
 
 export const AudioRoom: React.FC<AudioRoomProps> = ({ groveId, groveName }) => {
@@ -71,24 +71,39 @@ export const AudioRoom: React.FC<AudioRoomProps> = ({ groveId, groveName }) => {
 
   const loadSpeakerQueue = async (roomId: string) => {
     try {
-      const { data, error } = await supabase
+      // First get the speaker queue
+      const { data: queueData, error: queueError } = await supabase
         .from('speaker_queue')
-        .select(`
-          *,
-          profiles:user_id (
-            full_name
-          )
-        `)
+        .select('*')
         .eq('room_id', roomId)
         .order('position');
 
-      if (error) {
-        console.error('Error loading speaker queue:', error);
+      if (queueError) {
+        console.error('Error loading speaker queue:', queueError);
+        setSpeakerQueue([]);
+        return;
+      }
+
+      // Then get profiles for each user
+      if (queueData && queueData.length > 0) {
+        const userIds = queueData.map(item => item.user_id);
+        const { data: profilesData } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .in('id', userIds);
+
+        const enrichedQueue = queueData.map(item => ({
+          ...item,
+          profiles: profilesData?.find(p => p.id === item.user_id) || null
+        }));
+
+        setSpeakerQueue(enrichedQueue);
       } else {
-        setSpeakerQueue(data || []);
+        setSpeakerQueue([]);
       }
     } catch (error) {
       console.error('Error in loadSpeakerQueue:', error);
+      setSpeakerQueue([]);
     }
   };
 
@@ -299,7 +314,7 @@ export const AudioRoom: React.FC<AudioRoomProps> = ({ groveId, groveName }) => {
           </div>
           {isConnected && (
             <div className="flex items-center space-x-2">
-              <Badge variant={isMuted ? "destructive" : "default"}>
+              <Badge variant={isMuted ? "outline" : "default"}>
                 {isMuted ? 'Muted' : 'Unmuted'}
               </Badge>
               {handRaised && (
@@ -355,14 +370,15 @@ export const AudioRoom: React.FC<AudioRoomProps> = ({ groveId, groveName }) => {
               </PrimaryButton>
               <PrimaryButton 
                 onClick={toggleMute}
-                variant={isMuted ? "destructive" : "outline"}
+                variant="outline"
+                className={isMuted ? "border-red-500 text-red-500 hover:bg-red-50" : ""}
               >
                 {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
               </PrimaryButton>
               <PrimaryButton 
                 onClick={raiseHand}
-                variant={handRaised ? "default" : "outline"}
-                className={handRaised ? "bg-yellow-500 hover:bg-yellow-600" : ""}
+                variant="outline"
+                className={handRaised ? "bg-yellow-500 hover:bg-yellow-600 text-white border-yellow-500" : ""}
               >
                 <Hand className="h-4 w-4" />
               </PrimaryButton>
