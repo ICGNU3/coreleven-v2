@@ -19,72 +19,79 @@ const AboutPage = () => {
             
             <div className="prose prose-stone max-w-none text-stone-700 space-y-6">
               <p className="text-lg">
-                Coreleven is a rhythm-based structure for intentional growth. It begins with one person and unfolds through small, trust-centered circles called Groves.
+                Coreleven helps you build the trusted community you've been looking for. Start with 11 people who matter to you.
+              </p>
+              
+              <h2 className="text-2xl font-medium text-earth-700 mt-8 mb-4">The Problem We Solve</h2>
+              
+              <p>
+                Building meaningful professional and personal relationships is harder than ever. Social media creates shallow connections. Networking events feel transactional. Online communities are too large to form real bonds.
               </p>
               
               <p>
-                Clarity powers momentum. Trust sustains it. In a world full of noise, Coreleven creates space for people to move with purpose and grow through rhythm.
+                You want a group of people you can trust - to share ideas with, get feedback from, and support each other's growth. But finding and organizing that group feels overwhelming.
+              </p>
+              
+              <h2 className="text-2xl font-medium text-earth-700 mt-8 mb-4">Our Solution: Groves</h2>
+              
+              <p>
+                A Grove is your private circle of 11 people. Small enough that everyone knows each other. Large enough for diverse perspectives and meaningful discussion.
               </p>
               
               <p>
-                At the core of the system is the Grove: a group of eleven people. You begin by inviting ten people you trust, respect, or want to grow with. When your Grove is complete, it becomes an active part of a living network designed to support reflection, shared pace, and meaningful action.
+                You choose every member. You control the privacy. You shape the culture. We provide the tools to make it work.
               </p>
               
-              <p>
-                Each Grove defines its rhythm. Circles connect without hierarchy. Growth moves through aligned actions and rituals, not roles or titles. The idea is simple: eleven is enough to begin.
-              </p>
+              <h2 className="text-2xl font-medium text-earth-700 mt-8 mb-4">How It Works</h2>
               
-              <p>
-                Coreleven offers a light, flexible structure:
-              </p>
-              
-              <ul className="my-6 space-y-2">
+              <ul className="my-6 space-y-3">
                 <li className="flex items-start">
-                  <span className="text-earth-500 mr-2">•</span>
-                  <span>Onboarding rhythm to start with clarity</span>
+                  <span className="text-earth-500 mr-3 font-bold">1.</span>
+                  <span><strong>Start Your Grove:</strong> You're the first member. Invite 10 people you trust and respect.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-earth-500 mr-2">•</span>
-                  <span>Symbolic recognition of Grove completion</span>
+                  <span className="text-earth-500 mr-3 font-bold">2.</span>
+                  <span><strong>Build Together:</strong> Use chat, audio rooms, and shared tools to connect and collaborate.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-earth-500 mr-2">•</span>
-                  <span>Access to tools and practices for reflection</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-earth-500 mr-2">•</span>
-                  <span>A steward layer shaped by contribution</span>
+                  <span className="text-earth-500 mr-3 font-bold">3.</span>
+                  <span><strong>Grow Your Network:</strong> Each member can start their own Grove, expanding the trusted network.</span>
                 </li>
               </ul>
               
+              <h2 className="text-2xl font-medium text-earth-700 mt-8 mb-4">Why 11?</h2>
+              
               <p>
-                The alpha phase is invitation-based. The first 111 completed Groves form the foundation. From there, the system grows through aligned expansion.
+                We've found 11 to be the perfect size. Large enough for rich discussions and diverse input. Small enough that everyone can participate meaningfully and build real relationships with each other.
+              </p>
+              
+              <h2 className="text-2xl font-medium text-earth-700 mt-8 mb-4">Built for Trust</h2>
+              
+              <p>
+                Privacy is fundamental. Your Grove is yours. You control who joins, what gets shared, and how your community operates. We provide the platform, you create the culture.
               </p>
               
               <p>
-                Coreleven is stewarded by Israel Wilson, a systems builder, artist, and cultural architect. The design reflects a commitment to building structures that hold complexity with care and precision. It's a framework born from lived experience and focused on long-term resonance.
+                Coreleven is designed and built by Israel Wilson, focused on creating tools that support genuine human connection and mutual growth.
               </p>
               
-              <p>
-                You don't need to explain it. You'll know if it fits. If it does, begin.
-              </p>
-              
-              <p>
-                Start your Grove. Let the rhythm begin.
-              </p>
-              
-              <p className="text-xl font-medium text-earth-700 mt-8">
-                Eleven is enough.
-              </p>
+              <div className="bg-earth-50 p-6 rounded-lg mt-8">
+                <p className="text-lg font-medium text-earth-700 mb-3">
+                  Ready to start building?
+                </p>
+                <p className="text-stone-600 mb-4">
+                  Your Grove begins with the first person you invite. Choose people who inspire you, challenge you, and support your growth.
+                </p>
+              </div>
             </div>
             
             <div className="mt-12 text-center">
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <PrimaryButton asChild size="lg">
-                  <Link to="/invite">Build My Grove</Link>
+                  <Link to="/signup">Start Your Grove</Link>
                 </PrimaryButton>
                 <PrimaryButton asChild variant="outline" size="lg">
-                  <Link to="/faq">View FAQ</Link>
+                  <Link to="/faq">Common Questions</Link>
                 </PrimaryButton>
               </div>
             </div>
