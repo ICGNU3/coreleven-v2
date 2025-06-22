@@ -16,8 +16,30 @@ import FAQ from "./pages/FAQ";
 import AboutPage from "./pages/AboutPage";
 import StartGrovePage from "./pages/StartGrovePage";
 import { ScrollToTop } from "./components/ScrollToTop";
+import { useIsMobile } from "./hooks/use-mobile";
 
 const queryClient = new QueryClient();
+
+const AppContent = () => {
+  const isMobile = useIsMobile();
+  
+  return (
+    <div className={isMobile ? "mobile-app" : ""}>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/invite/:inviteId?" element={<InvitePage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/grove-complete" element={<GroveCompletePage />} />
+        <Route path="/grove" element={<StartGrovePage />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -27,19 +49,7 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/invite/:inviteId?" element={<InvitePage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/grove-complete" element={<GroveCompletePage />} />
-            <Route path="/grove" element={<StartGrovePage />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/about" element={<AboutPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AppContent />
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
